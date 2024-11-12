@@ -3,6 +3,7 @@ package com.i3.delivery.store.controller;
 import com.i3.delivery.store.dto.*;
 import com.i3.delivery.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,9 +38,10 @@ public class StoreController {
 
         return storeService.updateStore(storeId, storeEditRequsetDto);
     }
-//
-//    @DeleteMapping
-//    public ResponseBody deleteStore(){
-//
-//    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteStore(@PathVariable Long id) {
+
+        return storeService.deleteStore(id);
+    }
 }

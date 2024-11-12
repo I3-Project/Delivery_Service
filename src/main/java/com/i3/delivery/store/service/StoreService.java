@@ -4,6 +4,8 @@ import com.i3.delivery.store.dto.*;
 import com.i3.delivery.store.entity.Store;
 import com.i3.delivery.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,5 +47,12 @@ public class StoreService {
         store.update(storeEditRequsetDto);
 
         return new StoreEditResponseDto(store);
+    }
+
+    public ResponseEntity<String> deleteStore(Long id) {
+
+        storeRepository.deleteById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
     }
 }
