@@ -1,8 +1,8 @@
-package com.i3.delivery.store.service;
+package com.i3.delivery.domain.store.service;
 
-import com.i3.delivery.store.dto.*;
-import com.i3.delivery.store.entity.Store;
-import com.i3.delivery.store.repository.StoreRepository;
+import com.i3.delivery.domain.store.dto.*;
+import com.i3.delivery.domain.store.entity.Store;
+import com.i3.delivery.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +33,16 @@ public class StoreService {
         return storeRepository.findAll().stream().map(StoreInfoResponseDto::new).toList();
     }
 
-    public StoreInfoResponseDto getStore(Long storeId) {
+    public StoreInfoResponseDto getStore(Long id) {
 
-        Store store = storeRepository.findById(storeId).orElse(null);
+        Store store = storeRepository.findById(id).orElse(null);
 
         return new StoreInfoResponseDto(store);
     }
 
-    public StoreEditResponseDto updateStore(Long storeId, StoreEditRequsetDto storeEditRequsetDto) {
+    public StoreEditResponseDto updateStore(Long id, StoreEditRequsetDto storeEditRequsetDto) {
 
-        Store store = storeRepository.findById(storeId).orElse(null);
+        Store store = storeRepository.findById(id).orElse(null);
 
         store.update(storeEditRequsetDto);
 

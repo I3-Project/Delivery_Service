@@ -1,12 +1,10 @@
-package com.i3.delivery.store.entity;
+package com.i3.delivery.domain.store.entity;
 
-import com.i3.delivery.store.dto.StoreEditRequsetDto;
-import com.i3.delivery.store.dto.StoreRegistrationRequestDto;
+import com.i3.delivery.domain.BaseEntity;
+import com.i3.delivery.domain.store.dto.StoreEditRequsetDto;
+import com.i3.delivery.domain.store.dto.StoreRegistrationRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.security.Timestamp;
 import java.util.UUID;
@@ -14,10 +12,10 @@ import java.util.UUID;
 @Entity
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "stores")
-public class Store extends com.i3.delivery.store.entity.Timestamp {
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "p_stores")
+public class Store extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

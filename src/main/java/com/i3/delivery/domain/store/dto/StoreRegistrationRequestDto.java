@@ -1,4 +1,4 @@
-package com.i3.delivery.store.dto;
+package com.i3.delivery.domain.store.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
