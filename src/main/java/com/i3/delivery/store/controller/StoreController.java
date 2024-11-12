@@ -6,6 +6,8 @@ import com.i3.delivery.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/stores")
 @RequiredArgsConstructor
@@ -17,11 +19,11 @@ public class StoreController {
     public StoreRegistrationResponseDto createStore(@RequestBody StoreRegistrationRequestDto storeRegistrationRequestDto) {
         return storeService.createStore(storeRegistrationRequestDto);
     }
-//
-//    @GetMapping
-//    public ResponseBody getStore(){
-//
-//    }
+
+    @GetMapping
+    public List<StoreRegistrationResponseDto> getStore(){
+        return storeService.getStores();
+    }
 //
 //    @GetMapping
 //    public ResponseBody getAllStore(){

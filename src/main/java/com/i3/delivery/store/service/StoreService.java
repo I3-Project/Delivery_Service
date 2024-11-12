@@ -7,6 +7,8 @@ import com.i3.delivery.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class StoreService {
@@ -22,5 +24,11 @@ public class StoreService {
         StoreRegistrationResponseDto storeRegistrationResponseDto = new StoreRegistrationResponseDto(saveStore);
 
         return storeRegistrationResponseDto;
+    }
+
+
+    public List<StoreRegistrationResponseDto> getStores() {
+        
+        return storeRepository.findAll().stream().map(StoreRegistrationResponseDto::new).toList();
     }
 }
