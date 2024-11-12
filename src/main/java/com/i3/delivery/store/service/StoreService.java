@@ -1,5 +1,6 @@
 package com.i3.delivery.store.service;
 
+import com.i3.delivery.store.dto.StoreInfoResponseDto;
 import com.i3.delivery.store.dto.StoreRegistrationRequestDto;
 import com.i3.delivery.store.dto.StoreRegistrationResponseDto;
 import com.i3.delivery.store.entity.Store;
@@ -27,15 +28,15 @@ public class StoreService {
     }
 
 
-    public List<StoreRegistrationResponseDto> getStores() {
+    public List<StoreInfoResponseDto> getStores() {
 
-        return storeRepository.findAll().stream().map(StoreRegistrationResponseDto::new).toList();
+        return storeRepository.findAll().stream().map(StoreInfoResponseDto::new).toList();
     }
 
-    public StoreRegistrationResponseDto getStore(Long storeId) {
+    public StoreInfoResponseDto getStore(Long storeId) {
 
         Store store = storeRepository.findById(storeId).orElse(null);
 
-        return new StoreRegistrationResponseDto(store);
+        return new StoreInfoResponseDto(store);
     }
 }

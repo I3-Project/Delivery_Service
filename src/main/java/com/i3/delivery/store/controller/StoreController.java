@@ -1,5 +1,6 @@
 package com.i3.delivery.store.controller;
 
+import com.i3.delivery.store.dto.StoreInfoResponseDto;
 import com.i3.delivery.store.dto.StoreRegistrationRequestDto;
 import com.i3.delivery.store.dto.StoreRegistrationResponseDto;
 import com.i3.delivery.store.service.StoreService;
@@ -21,12 +22,12 @@ public class StoreController {
     }
 
     @GetMapping
-    public List<StoreRegistrationResponseDto> getAllStore(){
+    public List<StoreInfoResponseDto> getAllStore(){
         return storeService.getStores();
     }
 
     @GetMapping("/{storeId}")
-    public StoreRegistrationResponseDto getStore(@PathVariable Long storeId) {
+    public StoreInfoResponseDto getStore(@PathVariable Long storeId) {
         return storeService.getStore(storeId);
     }
 //
