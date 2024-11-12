@@ -28,7 +28,14 @@ public class StoreService {
 
 
     public List<StoreRegistrationResponseDto> getStores() {
-        
+
         return storeRepository.findAll().stream().map(StoreRegistrationResponseDto::new).toList();
+    }
+
+    public StoreRegistrationResponseDto getStore(Long storeId) {
+
+        Store store = storeRepository.findById(storeId).orElse(null);
+
+        return new StoreRegistrationResponseDto(store);
     }
 }

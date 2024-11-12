@@ -25,10 +25,10 @@ public class StoreController {
         return storeService.getStores();
     }
 
-//    @GetMapping
-//    public ResponseBody getStore(){
-//
-//    }
+    @GetMapping("/{storeId}")
+    public StoreRegistrationResponseDto getStore(@PathVariable Long storeId) {
+        return storeService.getStore(storeId);
+    }
 //
 //    @PatchMapping
 //    public ResponseBody updateStore(){
