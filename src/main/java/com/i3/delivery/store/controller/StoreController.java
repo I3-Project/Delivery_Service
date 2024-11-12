@@ -21,12 +21,12 @@ public class StoreController {
     }
 
     @GetMapping
-    public List<StoreRegistrationResponseDto> getStore(){
+    public List<StoreRegistrationResponseDto> getAllStore(){
         return storeService.getStores();
     }
-//
+
 //    @GetMapping
-//    public ResponseBody getAllStore(){
+//    public ResponseBody getStore(){
 //
 //    }
 //
