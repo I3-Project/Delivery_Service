@@ -19,7 +19,6 @@ public class StoreRegistrationResponseDto {
     private String status;
     private int totalReviews;
     private int ratingAvg;
-    private String createdBy;
 
     public StoreRegistrationResponseDto(Store store) {
         this.name = store.getName();
@@ -31,6 +30,5 @@ public class StoreRegistrationResponseDto {
         this.status = store.getStatus();
         this.totalReviews = store.getTotalReviews();
         this.ratingAvg = store.getRatingAvg();
-        this.createdBy = store.getCreatedBy();
     }
 }
