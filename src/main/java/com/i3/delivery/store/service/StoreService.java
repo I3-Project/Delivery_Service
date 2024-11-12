@@ -1,8 +1,6 @@
 package com.i3.delivery.store.service;
 
-import com.i3.delivery.store.dto.StoreInfoResponseDto;
-import com.i3.delivery.store.dto.StoreRegistrationRequestDto;
-import com.i3.delivery.store.dto.StoreRegistrationResponseDto;
+import com.i3.delivery.store.dto.*;
 import com.i3.delivery.store.entity.Store;
 import com.i3.delivery.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,5 +36,14 @@ public class StoreService {
         Store store = storeRepository.findById(storeId).orElse(null);
 
         return new StoreInfoResponseDto(store);
+    }
+
+    public StoreEditResponseDto updateStore(Long storeId, StoreEditRequsetDto storeEditRequsetDto) {
+
+        Store store = storeRepository.findById(storeId).orElse(null);
+
+        store.update(storeEditRequsetDto);
+
+        return new StoreEditResponseDto(store);
     }
 }

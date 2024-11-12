@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StoreEditRequsetDto {
 
-
-
+    private String name;
+    private String description;
+    private String category;
+    private String address;
+    private String phoneNumber;
+    private String status;
 }

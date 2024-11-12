@@ -1,8 +1,6 @@
 package com.i3.delivery.store.controller;
 
-import com.i3.delivery.store.dto.StoreInfoResponseDto;
-import com.i3.delivery.store.dto.StoreRegistrationRequestDto;
-import com.i3.delivery.store.dto.StoreRegistrationResponseDto;
+import com.i3.delivery.store.dto.*;
 import com.i3.delivery.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,23 +16,27 @@ public class StoreController {
 
     @PostMapping
     public StoreRegistrationResponseDto createStore(@RequestBody StoreRegistrationRequestDto storeRegistrationRequestDto) {
+
         return storeService.createStore(storeRegistrationRequestDto);
     }
 
     @GetMapping
     public List<StoreInfoResponseDto> getAllStore(){
+
         return storeService.getStores();
     }
 
     @GetMapping("/{storeId}")
     public StoreInfoResponseDto getStore(@PathVariable Long storeId) {
+
         return storeService.getStore(storeId);
     }
-//
-//    @PatchMapping
-//    public ResponseBody updateStore(){
-//
-//    }
+
+    @PatchMapping("/{storeId}")
+    public StoreEditResponseDto updateStore(@PathVariable Long storeId, @RequestBody StoreEditRequsetDto storeEditRequsetDto) {
+
+        return storeService.updateStore(storeId, storeEditRequsetDto);
+    }
 //
 //    @DeleteMapping
 //    public ResponseBody deleteStore(){

@@ -1,5 +1,6 @@
 package com.i3.delivery.store.entity;
 
+import com.i3.delivery.store.dto.StoreEditRequsetDto;
 import com.i3.delivery.store.dto.StoreRegistrationRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -89,6 +90,14 @@ public class Store extends com.i3.delivery.store.entity.Timestamp {
         this.createdBy = storeRegistrationRequestDto.getCreatedBy();
     }
 
+    public void update(StoreEditRequsetDto storeEditRequsetDto) {
+        this.name = storeEditRequsetDto.getName();
+        this.description = storeEditRequsetDto.getDescription();
+        this.category = storeEditRequsetDto.getCategory();
+        this.address = storeEditRequsetDto.getAddress();
+        this.phoneNumber = storeEditRequsetDto.getPhoneNumber();
+        this.status = storeEditRequsetDto.getStatus();
+    }
 
 //    @OneToMany(mappedBy = "products")
 //    @JsonIgnore
