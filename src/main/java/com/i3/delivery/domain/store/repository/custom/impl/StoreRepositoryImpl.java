@@ -23,6 +23,11 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .where(nameCon(keyword)
                         .or(categoryCon(keyword)
                                 .or(statusCon(keyword))))
+                .orderBy(
+                        store.name.asc(),
+                        store.category.asc(),
+                        store.status.asc()
+                )
                 .fetch();
         return stores;
     }
@@ -52,8 +57,6 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
             }
         }
         return null;
-//        return store.status.in(Status.valueOf(keyword));
-//        return store.status.eq(Status.valueOf(keyword));
     }
 
 
