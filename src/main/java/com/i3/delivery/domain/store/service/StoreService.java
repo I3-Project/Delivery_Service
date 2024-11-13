@@ -45,7 +45,6 @@ public class StoreService {
 
         Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
-        // 더티체크
         store.update(storeEditRequsetDto);
 
         return StoreEditResponseDto.from(store);
