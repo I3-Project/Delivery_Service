@@ -1,11 +1,12 @@
 package com.i3.delivery.domain.store.dto;
 
 import com.i3.delivery.domain.store.entity.Store;
+import com.i3.delivery.domain.store.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -18,15 +19,15 @@ public class StoreInfoResponseDto {
     private long ownerId;
     private String address;
     private String phoneNumber;
-    private String status;
+    private Status status;
     private int totalReviews;
     private int ratingAvg;
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
     private String createdBy;
-    private Timestamp updatedAt;
+    private LocalDateTime updatedAt;
     private String updatedBy;
-    private Timestamp deletedAt;
-    private String deletedBy;
+    private LocalDateTime deletedAt;
+    private long deletedBy;
 
     public StoreInfoResponseDto(Store store) {
         this.name = store.getName();
@@ -42,7 +43,7 @@ public class StoreInfoResponseDto {
         this.createdBy = store.getCreatedBy();
         this.updatedAt = store.getUpdatedAt();
         this.updatedBy = store.getUpdatedBy();
-        //this.deletedAt = store.getDeletedAt();
+        this.deletedAt = store.getDeletedAt();
         this.deletedBy = store.getDeletedBy();
     }
 }

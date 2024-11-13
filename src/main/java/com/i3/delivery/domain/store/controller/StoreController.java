@@ -43,6 +43,7 @@ public class StoreController {
         return storeService.updateStore(id, storeEditRequsetDto);
     }
 
+    // User와 매핑해서 해당 유저가 가게 주인이면 삭제, 그 때 가게 주인을 deletedBy로 넣어서 해결
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteStore(@PathVariable Long id) {
 

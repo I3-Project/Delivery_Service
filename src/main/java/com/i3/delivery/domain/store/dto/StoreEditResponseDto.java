@@ -1,6 +1,7 @@
 package com.i3.delivery.domain.store.dto;
 
 import com.i3.delivery.domain.store.entity.Store;
+import com.i3.delivery.domain.store.enums.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,14 +14,16 @@ public class StoreEditResponseDto {
     private String category;
     private String address;
     private String phoneNumber;
-    private String status;
+    private Status status;
 
-    public StoreEditResponseDto(Store store) {
-        this.name = store.getName();
-        this.description = store.getDescription();
-        this.category = store.getCategory();
-        this.address = store.getAddress();
-        this.phoneNumber = store.getPhoneNumber();
-        this.status = store.getStatus();
+    public static StoreEditResponseDto from(Store store) {
+        StoreEditResponseDto dto = new StoreEditResponseDto();
+        dto.name = store.getName();
+        dto.description = store.getDescription();
+        dto.category = store.getCategory();
+        dto.address = store.getAddress();
+        dto.phoneNumber = store.getPhoneNumber();
+        dto.status = store.getStatus();
+        return dto;
     }
 }

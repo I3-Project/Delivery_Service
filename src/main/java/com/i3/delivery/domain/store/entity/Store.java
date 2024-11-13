@@ -3,10 +3,11 @@ package com.i3.delivery.domain.store.entity;
 import com.i3.delivery.domain.BaseEntity;
 import com.i3.delivery.domain.store.dto.StoreEditRequsetDto;
 import com.i3.delivery.domain.store.dto.StoreRegistrationRequestDto;
+import com.i3.delivery.domain.store.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -47,8 +48,8 @@ public class Store extends BaseEntity {
     @Column(nullable = false)
     private String phoneNumber;
 
-    @Column(nullable = false)
-    private String status;
+//    @Column(nullable = false)
+//    private String status;
 
     @Column(nullable = false)
     private int totalReviews;
@@ -56,24 +57,32 @@ public class Store extends BaseEntity {
     @Column(nullable = false)
     private int ratingAvg;
 
-//    @Column(nullable = false, name="created_at")
-//    private Timestamp createdAt;
-
     @Column(nullable = false)
     private String createdBy;
-
-//    @Column(name="updated_at")
-//    private Timestamp updatedAt;
 
     @Column
     private String updatedBy;
 
+    // 상태가 delete 인것만 ?에 delete = true면 prepersist를 써서 at과 by를
+    //prepersist
     @Column(name="deleted_at")
-    private Timestamp deletedAt;
+    private LocalDateTime deletedAt;
 
-    //preremove
-    @Column
-    private String deletedBy;
+    @Column(name="deleted_by")
+    private long deletedBy;
+
+    //삭제플래그 추가
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @PreUpdate
+    public void updateDeleteField(){
+        if(status == Status.DELETED) {
+
+            this.deletedAt = LocalDateTime.now();
+            this.deletedBy = id;
+        }
+    }
 
     public Store(StoreRegistrationRequestDto storeRegistrationRequestDto) {
         this.uuid = UUID.randomUUID().toString(); //랜덤으로 아이디 생성해서 구분
@@ -82,7 +91,8 @@ public class Store extends BaseEntity {
         this.category = storeRegistrationRequestDto.getCategory();
         this.address = storeRegistrationRequestDto.getAddress();
         this.phoneNumber = storeRegistrationRequestDto.getPhoneNumber();
-        this.status = storeRegistrationRequestDto.getStatus();
+//        this.status = storeRegistrationRequestDto.getStatus();
+        this.status = Status.CLOSE;
         this.totalReviews = storeRegistrationRequestDto.getTotalReviews();
         this.ratingAvg = storeRegistrationRequestDto.getRatingAvg();
         this.createdBy = storeRegistrationRequestDto.getCreatedBy();
@@ -95,7 +105,21 @@ public class Store extends BaseEntity {
         this.address = storeEditRequsetDto.getAddress();
         this.phoneNumber = storeEditRequsetDto.getPhoneNumber();
         this.status = storeEditRequsetDto.getStatus();
+        this.totalReviews = storeEditRequsetDto.getTotalReviews();
+        this.ratingAvg = storeEditRequsetDto.getRatingAvg();
+        this.updatedBy = "me";
+//        this.updatedBy = storeEditRequsetDto.getUser();
     }
+
+    public void delete(Long id) {
+        this.status = Status.DELETED;
+    }
+
+    // delete 메서드
+//    public void update(User user) {
+//        this.deletedBy = user.getName();
+//        this.deletedAt = now;
+//    }
 
 //    @OneToMany(mappedBy = "products")
 //    @JsonIgnore

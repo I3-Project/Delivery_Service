@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,7 +28,6 @@ public class StoreService {
         return storeRegistrationResponseDto;
     }
 
-
     public List<StoreInfoResponseDto> getStores() {
 
         return storeRepository.findAll().stream().map(StoreInfoResponseDto::new).toList();
@@ -40,18 +40,23 @@ public class StoreService {
         return new StoreInfoResponseDto(store);
     }
 
+    @Transactional
     public StoreEditResponseDto updateStore(Long id, StoreEditRequsetDto storeEditRequsetDto) {
 
-        Store store = storeRepository.findById(id).orElse(null);
+        Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
+        // 더티체크
         store.update(storeEditRequsetDto);
 
-        return new StoreEditResponseDto(store);
+        return StoreEditResponseDto.from(store);
     }
 
+    @Transactional
     public ResponseEntity<String> deleteStore(Long id) {
 
-        storeRepository.deleteById(id);
+        Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+
+        store.delete(id);
 
         return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
     }

@@ -1,6 +1,7 @@
 package com.i3.delivery.domain.store.dto;
 
 import com.i3.delivery.domain.store.entity.Store;
+import com.i3.delivery.domain.store.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ public class StoreRegistrationResponseDto {
     private long ownerId;
     private String address;
     private String phoneNumber;
-    private String status;
+    private Status status;
     private int totalReviews;
     private int ratingAvg;
 
