@@ -33,6 +33,12 @@ public class StoreController {
         return storeService.getStore(id);
     }
 
+    @GetMapping("/keyword/{keyword}")
+    public List<StoreInfoResponseDto> getStoresByKeyword(@PathVariable(name = "keyword") String keyword) {
+
+        return storeService.getStoresByKeyword(keyword);
+    }
+
     @PatchMapping("/{id}")
     public StoreEditResponseDto updateStore(@PathVariable(name = "id") Long id, @RequestBody StoreEditRequsetDto storeEditRequsetDto) {
 

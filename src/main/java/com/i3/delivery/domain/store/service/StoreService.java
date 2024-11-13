@@ -3,6 +3,7 @@ package com.i3.delivery.domain.store.service;
 import com.i3.delivery.domain.store.dto.*;
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.store.repository.StoreRepository;
+import com.i3.delivery.domain.store.repository.custom.impl.StoreRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 public class StoreService {
 
     private final StoreRepository storeRepository;
+    private final StoreRepositoryImpl storeRepositoryImpl;
 
     public StoreRegistrationResponseDto createStore(StoreRegistrationRequestDto storeRegistrationRequestDto) {
 
@@ -38,6 +40,11 @@ public class StoreService {
         Store store = storeRepository.findById(id).orElse(null);
 
         return new StoreInfoResponseDto(store);
+    }
+
+    public List<StoreInfoResponseDto> getStoresByKeyword(String keyword) {
+
+        return storeRepositoryImpl.findAll(keyword).stream().map(StoreInfoResponseDto::new).toList();
     }
 
     @Transactional
