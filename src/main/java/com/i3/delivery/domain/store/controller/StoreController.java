@@ -28,19 +28,19 @@ public class StoreController {
     }
 
     @GetMapping("/{id}")
-    public StoreInfoResponseDto getStore(@PathVariable Long id) {
+    public StoreInfoResponseDto getStore(@PathVariable(name = "id") Long id) {
 
         return storeService.getStore(id);
     }
 
     @PatchMapping("/{id}")
-    public StoreEditResponseDto updateStore(@PathVariable Long id, @RequestBody StoreEditRequsetDto storeEditRequsetDto) {
+    public StoreEditResponseDto updateStore(@PathVariable(name = "id") Long id, @RequestBody StoreEditRequsetDto storeEditRequsetDto) {
 
         return storeService.updateStore(id, storeEditRequsetDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteStore(@PathVariable Long id) {
+    public ResponseEntity<String> deleteStore(@PathVariable(name = "id") Long id) {
 
         return storeService.deleteStore(id);
     }
