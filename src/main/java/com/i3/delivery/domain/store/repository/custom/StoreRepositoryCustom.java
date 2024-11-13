@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface StoreRepositoryCustom {
     List<Store> findAll(String keyword);
+    Double findStoreAvgAndReviews(String name);
 }

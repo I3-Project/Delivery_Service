@@ -39,6 +39,12 @@ public class StoreController {
         return storeService.getStoresByKeyword(keyword);
     }
 
+    @GetMapping("/store/{name}")
+    public Double getStoreAvg(@PathVariable(name = "name") String name) {
+
+        return storeService.getStoreAvg(name);
+    }
+
     @PatchMapping("/{id}")
     public StoreEditResponseDto updateStore(@PathVariable(name = "id") Long id, @RequestBody StoreEditRequsetDto storeEditRequsetDto) {
 

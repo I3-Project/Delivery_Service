@@ -59,5 +59,15 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         return null;
     }
 
+    @Override
+    public Double findStoreAvgAndReviews(String name) {
+        Double avg = queryFactory
+                .select(store.ratingAvg.avg())
+                .from(store)
+                .where(store.name.eq(name))
+                .fetchOne();
 
+
+        return avg;
+    }
 }
