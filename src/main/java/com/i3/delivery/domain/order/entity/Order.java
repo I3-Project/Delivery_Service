@@ -55,7 +55,7 @@ public class Order extends BaseEntity {
     @Column(name = "delete_by")
     private String deletedBy;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    /*@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProduct> orderProductList;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -67,12 +67,8 @@ public class Order extends BaseEntity {
     private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id", nullable = true)
-    private Payment payment;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
-    private Store store;
+    private Store store;*/
 
 
     @PreUpdate
@@ -94,10 +90,10 @@ public class Order extends BaseEntity {
     }*/
 
     // 주문 등록 (접수)
-    public Order(User user, Store store, String orderType) {
+   /* public Order(User user, Store store, String orderType) {
         this.user = user;
         this.store = store;
         this.orderType = OrderTypeEnum.valueOf(orderType);
         this.totalPrice = BigDecimal.ZERO;
-    }
+    }*/
 }
