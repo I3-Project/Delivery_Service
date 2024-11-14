@@ -8,9 +8,12 @@ import com.i3.delivery.domain.order.entity.enums.OrderStatusEnum;
 import com.i3.delivery.domain.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -56,5 +59,24 @@ public class OrderService {
         Order savedOrder = orderRepository.save(order);
 
         return OrderResponseDto.reResponseDto(savedOrder);
+    }
+
+    @Transactional
+    public void cancleOrder(UUID orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문 정보가 존재하지 않습니다."));
+
+        /* 주문이 생성된 후 5분 이내인지 확인*/
+        LocalDateTime currentTime = LocalDateTime.now();
+        Duration duration = Duration.between(order.getCreatedAt(), currentTime);
+
+        if (duration.getSeconds() > 300) {
+            throw new IllegalStateException("주문 후 5분 이내에만 삭제할 수 있습니다.");
+        }
+
+        order.setOrderStatus(OrderStatusEnum.valueOf("CANCELED"));
+
+        orderRepository.save(order);
     }
 }
