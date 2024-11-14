@@ -67,7 +67,8 @@ public class StoreService {
         return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
     }
 
-    public Double getStoreAvg(String name) {
+    @Transactional
+    public List<StoreReviewResponseDto> getStoreAvgAndReviews(String name) {
 
         return storeRepositoryImpl.findStoreAvgAndReviews(name);
     }

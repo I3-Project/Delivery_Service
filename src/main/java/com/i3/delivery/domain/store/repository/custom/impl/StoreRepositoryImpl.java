@@ -1,14 +1,17 @@
 package com.i3.delivery.domain.store.repository.custom.impl;
 
+import com.i3.delivery.domain.store.dto.StoreReviewResponseDto;
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.store.enums.Status;
 import com.i3.delivery.domain.store.repository.custom.StoreRepositoryCustom;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import static com.i3.delivery.domain.review.entity.QReview.review;
 import static com.i3.delivery.domain.store.entity.QStore.store;
 
 @RequiredArgsConstructor
@@ -60,14 +63,40 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     }
 
     @Override
-    public Double findStoreAvgAndReviews(String name) {
-        Double avg = queryFactory
-                .select(store.ratingAvg.avg())
+    public List<StoreReviewResponseDto> findStoreAvgAndReviews(String name) {
+
+        List<StoreReviewResponseDto> reviews = queryFactory
+                .select(
+                        Projections.constructor(
+                                StoreReviewResponseDto.class,
+                                store.ratingAvg,
+                                review.id,
+                                review.store.id,
+                                review.rating,
+                                review.reviewText,
+                                review.userName,
+                                review.createdAt
+                        )
+                )
                 .from(store)
+                .join(review)
+                .on(store.id.eq(review.store.id))
                 .where(store.name.eq(name))
-                .fetchOne();
+                .fetch();
 
+        double average = reviews.stream()
+                .map(StoreReviewResponseDto::getRating)
+                .mapToInt(Integer::intValue)
+                .average()
+                .orElse(0.0);
 
-        return avg;
+        queryFactory.update(store)
+                .set(store.ratingAvg, (int)average)
+                .where(store.name.eq(name))
+                .execute();
+
+        return reviews;
     }
+
+
 }

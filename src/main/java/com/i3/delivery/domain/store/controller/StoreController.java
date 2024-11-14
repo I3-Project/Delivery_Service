@@ -40,9 +40,9 @@ public class StoreController {
     }
 
     @GetMapping("/store/{name}")
-    public Double getStoreAvg(@PathVariable(name = "name") String name) {
+    public List<StoreReviewResponseDto> getStoreAvgAndReviews(@PathVariable(name = "name") String name) {
 
-        return storeService.getStoreAvg(name);
+        return storeService.getStoreAvgAndReviews(name);
     }
 
     @PatchMapping("/{id}")

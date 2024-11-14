@@ -1,13 +1,21 @@
 package com.i3.delivery.domain.store.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.i3.delivery.domain.BaseEntity;
+import com.i3.delivery.domain.review.entity.Review;
 import com.i3.delivery.domain.store.dto.StoreEditRequsetDto;
 import com.i3.delivery.domain.store.dto.StoreRegistrationRequestDto;
 import com.i3.delivery.domain.store.enums.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,32 +33,34 @@ public class Store extends BaseEntity {
     @Column
     private String uuid;
 
-    @Column(nullable = false)
+    @Size(min = 2, max = 20, message = "이름은 최소 2자입니다.")
+    @NotBlank(message = "이름을 입력해주세요.")
     private String name;
 
-    @Column
+    @Size(max = 500, message = "설명은 최대 500자입니다.")
+    @NotBlank(message = "설명을 입력해주세요.")
     private String description;
 
-    @Column(nullable = false)
+    @Size(max = 20, message = "카테고리는 최대 20자입니다.")
     private String category;
 
     @Column
     private long ownerId;
 
-    @Column(nullable = false)
+    @Size(max = 50, message = "주소는 최대 50자입니다.")
     private String address;
 
-    @Column(nullable = false)
+    @Size(max = 20, message = "번호는 최대 20자입니다.")
     private String phoneNumber;
 
-    //삭제플래그 추가
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(nullable = false)
+    @Column
     private int totalReviews;
 
     @Column(nullable = false)
+    @Min(1)@Max(5)
     private int ratingAvg;
 
     @Column(nullable = false)
@@ -70,9 +80,9 @@ public class Store extends BaseEntity {
 //    @OnDelete(action = OnDeleteAction.SET_NULL)
 //    private User ownerId;
 
-//    @OneToMany(mappedBy = "products")
-//    @JsonIgnore
-//    private List<Columns> columnsList = new ArrayList<>();
+    @OneToMany(mappedBy = "store")
+    @JsonIgnore
+    private List<Review> reviewList = new ArrayList<>();
 
     @PreUpdate
     public void updateDeleteField(){
