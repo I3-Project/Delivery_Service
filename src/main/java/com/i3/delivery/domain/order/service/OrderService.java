@@ -1,6 +1,7 @@
 package com.i3.delivery.domain.order.service;
 
 import com.i3.delivery.domain.order.dto.response.OrderListResponseDto;
+import com.i3.delivery.domain.order.dto.response.OrderResponseDto;
 import com.i3.delivery.domain.order.entity.Order;
 import com.i3.delivery.domain.order.entity.enums.OrderStatusEnum;
 import com.i3.delivery.domain.order.repository.OrderRepository;
@@ -80,19 +81,17 @@ public class OrderService {
 
     /* 2. 주문 취소 */
     @Transactional
-    public void cancelOrder(Long orderId) {
+    public void cancelOrder(Long orderId, Long userId) {
         
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보가 존재하지 않습니다."));
 
-        // TODO private method
-        /* 주문이 생성된 후 5분 이내인지 확인*/
-        LocalDateTime currentTime = LocalDateTime.now();
-        Duration duration = Duration.between(order.getCreatedAt(), currentTime);
-
-        if (duration.getSeconds() > 300) {
-            throw new IllegalStateException("주문 후 5분 이내에만 삭제할 수 있습니다.");
+        if (!order.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("회원님의 주문내역이 아닙니다.");
         }
+
+        /* 주문이 생성된 후 5분 이내인지 확인*/
+        cancelTimeCheck(order);
 
         order.setOrderStatus(OrderStatusEnum.CANCELED);
     }
@@ -141,4 +140,48 @@ public class OrderService {
 
     }
 
+    public Page<OrderListResponseDto> getUserOrderList(Pageable pageable, Integer size, Long userId, Long suserId) {
+
+        if (!userId.equals(suserId)) {
+            throw new IllegalArgumentException("회원님이 주문한 주문 내역이 아닙니다.");
+        }
+
+        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        Page<Order> userOrderList = orderRepository.findAllByUserId(userId, pageable);
+
+        List<OrderListResponseDto> responseDtoList = userOrderList.stream()
+                .map(OrderListResponseDto::new)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(responseDtoList, pageable, userOrderList.getTotalElements());
+    }
+
+    @Transactional
+    public void deleteOrder(Long orderId, Long userId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문 정보가 존재하지 않습니다."));
+
+        if (!order.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("회원님의 주문내역이 아닙니다.");
+        }
+
+        order.setOrderStatus(OrderStatusEnum.DELETED);
+    }
+
+    public OrderResponseDto getOrderDetails(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() ->
+                new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
+        return new OrderResponseDto(order);
+    }
+
+    private void cancelTimeCheck(Order order) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        Duration duration = Duration.between(order.getCreatedAt(), currentTime);
+
+        if (duration.getSeconds() > 300) {
+            throw new IllegalStateException("주문 후 5분 이내에만 삭제할 수 있습니다.");
+        }
+    }
 }
