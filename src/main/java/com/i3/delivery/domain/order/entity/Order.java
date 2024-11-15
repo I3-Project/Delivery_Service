@@ -28,7 +28,9 @@ import java.util.UUID;
 public class Order extends BaseEntity {
 
     @Id
+    // TODO UUID -> IDENTITY (db 도 auto increment)
     @GeneratedValue(strategy = GenerationType.UUID)
+    // TODO Long
     private UUID id;
 
     @Column(nullable = false)
