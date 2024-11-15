@@ -2,8 +2,11 @@ package com.i3.delivery.domain.store.service;
 
 import com.i3.delivery.domain.store.dto.*;
 import com.i3.delivery.domain.store.entity.Store;
+import com.i3.delivery.domain.store.enums.StoreStatus;
 import com.i3.delivery.domain.store.repository.StoreRepository;
 import com.i3.delivery.domain.store.repository.custom.impl.StoreRepositoryImpl;
+import com.i3.delivery.domain.user.entity.User;
+import com.i3.delivery.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,39 +21,51 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final StoreRepositoryImpl storeRepositoryImpl;
+    private final UserRepository userRepository;
 
-    public StoreRegistrationResponseDto createStore(StoreRegistrationRequestDto storeRegistrationRequestDto) {
+    public StoreRegistrationResponseDto createStore(User user, StoreRegistrationRequestDto storeRegistrationRequestDto) {
 
-        Store store = new Store(storeRegistrationRequestDto);
+        User storeUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
 
-        Store saveStore = storeRepository.save(store);
+        Store store = Store.builder()
+                .user(storeUser)
+                .name(storeRegistrationRequestDto.getName())
+                .description(storeRegistrationRequestDto.getDescription())
+                .category(storeRegistrationRequestDto.getCategory())
+                .phoneNumber(storeRegistrationRequestDto.getPhoneNumber())
+                .address(storeRegistrationRequestDto.getAddress())
+                .status(StoreStatus.CLOSE)
+                .totalReviews(0)
+                .ratingAvg(0)
+                .build();
 
-        StoreRegistrationResponseDto storeRegistrationResponseDto = new StoreRegistrationResponseDto(saveStore);
+        storeRepository.save(store);
 
-        return storeRegistrationResponseDto;
+        return StoreRegistrationResponseDto.fromEntity(store);
     }
 
     public List<StoreInfoResponseDto> getStores() {
 
-        return storeRepository.findAll().stream().map(StoreInfoResponseDto::new).toList();
+        return storeRepository.findAll().stream().map(store -> new StoreInfoResponseDto()).toList();
     }
 
     public StoreInfoResponseDto getStore(Long id) {
 
         Store store = storeRepository.findById(id).orElse(null);
 
-        return new StoreInfoResponseDto(store);
+        return StoreInfoResponseDto.fromEntity(store);
     }
 
     public List<StoreInfoResponseDto> getStoresByKeyword(String keyword) {
 
-        return storeRepositoryImpl.findAll(keyword).stream().map(StoreInfoResponseDto::new).toList();
+        return storeRepositoryImpl.findAll(keyword).stream().map(store -> new StoreInfoResponseDto()).toList();
     }
 
     @Transactional
     public StoreEditResponseDto updateStore(Long id, StoreEditRequsetDto storeEditRequsetDto) {
 
-       Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         store.update(storeEditRequsetDto);
 
@@ -62,7 +77,7 @@ public class StoreService {
 
         Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
-        store.delete(id);
+        store.delete();
 
         return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
 

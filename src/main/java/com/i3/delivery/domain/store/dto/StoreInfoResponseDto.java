@@ -3,6 +3,7 @@ package com.i3.delivery.domain.store.dto;
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.store.enums.StoreStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class StoreInfoResponseDto {
 
     private String name;
@@ -27,23 +29,25 @@ public class StoreInfoResponseDto {
     private LocalDateTime updatedAt;
     private String updatedBy;
     private LocalDateTime deletedAt;
-    private long deletedBy;
+    private String deletedBy;
 
-    public StoreInfoResponseDto(Store store) {
-        this.name = store.getName();
-        this.description = store.getDescription();
-        this.category = store.getCategory();
-        this.ownerId = store.getOwnerId();
-        this.address = store.getAddress();
-        this.phoneNumber = store.getPhoneNumber();
-        this.status = store.getStatus();
-        this.totalReviews = store.getTotalReviews();
-        this.ratingAvg = store.getRatingAvg();
-        this.createdAt = store.getCreatedAt();
-        this.createdBy = store.getCreatedBy();
-        this.updatedAt = store.getUpdatedAt();
-        this.updatedBy = store.getUpdatedBy();
-        this.deletedAt = store.getDeletedAt();
-        this.deletedBy = store.getDeletedBy();
+    public static StoreInfoResponseDto fromEntity(Store store) {
+        return StoreInfoResponseDto.builder()
+                .name(store.getName())
+                .description(store.getDescription())
+                .category(store.getCategory())
+                .ownerId(store.getUser().getId())
+                .address(store.getAddress())
+                .phoneNumber(store.getPhoneNumber())
+                .status(store.getStatus())
+                .totalReviews(store.getTotalReviews())
+                .ratingAvg(store.getRatingAvg())
+                .createdAt(store.getCreatedAt())
+                .createdBy(store.getCreatedBy())
+                .updatedAt(store.getUpdatedAt())
+                .updatedBy(store.getUpdatedBy())
+                .deletedAt(store.getDeletedAt())
+                .deletedBy(store.getDeletedBy())
+                .build();
     }
 }
