@@ -101,4 +101,9 @@ public class StoreService {
 
         return storeRepositoryImpl.findStoreAvgAndReviews(name);
     }
+
+    public Store findStore(Long storeId) {
+
+        return storeRepository.findById(storeId).orElseThrow(IllegalArgumentException::new);
+    }
 }
