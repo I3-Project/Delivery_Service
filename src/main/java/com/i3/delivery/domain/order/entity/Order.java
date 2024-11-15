@@ -24,7 +24,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(access= AccessLevel.PUBLIC)
+@Builder
 public class Order extends BaseEntity {
 
     @Id

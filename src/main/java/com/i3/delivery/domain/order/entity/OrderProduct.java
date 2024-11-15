@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(access= AccessLevel.PUBLIC)
+@Builder
 public class OrderProduct extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
