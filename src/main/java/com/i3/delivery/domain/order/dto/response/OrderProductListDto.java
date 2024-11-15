@@ -8,6 +8,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class OrderProductListDto {
-    private UUID productId;
+    private Long productId;
     private Integer quantity;
 }
