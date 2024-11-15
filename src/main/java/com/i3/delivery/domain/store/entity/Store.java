@@ -1,6 +1,7 @@
 package com.i3.delivery.domain.store.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.i3.delivery.domain.category.entity.Category;
 import com.i3.delivery.domain.review.entity.Review;
 import com.i3.delivery.domain.store.dto.StoreEditRequsetDto;
 import com.i3.delivery.domain.store.enums.StoreStatus;
@@ -40,13 +41,17 @@ public class Store extends BaseEntity {
     @Size(min = 2, max = 20, message = "이름은 최소 2자입니다.")
     @NotBlank(message = "이름을 입력해주세요.")
     private String name;
+//
+//    @Column
+//    private Long ownerId;
 
     @Size(max = 500, message = "설명은 최대 500자입니다.")
     @NotBlank(message = "설명을 입력해주세요.")
     private String description;
 
-    @Size(max = 20, message = "카테고리는 최대 20자입니다.")
-    private String category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Size(max = 50, message = "주소는 최대 50자입니다.")
     private String address;
@@ -61,7 +66,7 @@ public class Store extends BaseEntity {
     private int totalReviews;
 
     @Column(nullable = false)
-    @Min(1)@Max(5)
+    @Min(-1)@Max(5)
     private int ratingAvg;
 
     @Column(name="deleted_at")
@@ -71,7 +76,7 @@ public class Store extends BaseEntity {
     private String deletedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "store")
@@ -98,12 +103,15 @@ public class Store extends BaseEntity {
     public void update(StoreEditRequsetDto storeEditRequsetDto) {
         this.name = storeEditRequsetDto.getName();
         this.description = storeEditRequsetDto.getDescription();
-        this.category = storeEditRequsetDto.getCategory();
         this.address = storeEditRequsetDto.getAddress();
         this.phoneNumber = storeEditRequsetDto.getPhoneNumber();
         this.status = storeEditRequsetDto.getStatus();
         this.totalReviews = storeEditRequsetDto.getTotalReviews();
         this.ratingAvg = storeEditRequsetDto.getRatingAvg();
+    }
+
+    public void updateCategory(Category category) {
+        this.category = category;
     }
 
     public void delete() {

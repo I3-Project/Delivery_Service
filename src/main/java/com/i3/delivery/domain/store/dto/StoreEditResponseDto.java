@@ -11,7 +11,7 @@ public class StoreEditResponseDto {
 
     private String name;
     private String description;
-    private String category;
+    private Long categoryId;
     private String address;
     private String phoneNumber;
     private StoreStatus status;
@@ -20,7 +20,7 @@ public class StoreEditResponseDto {
         StoreEditResponseDto dto = new StoreEditResponseDto();
         dto.name = store.getName();
         dto.description = store.getDescription();
-        dto.category = store.getCategory();
+        dto.categoryId = store.getCategory().getId();
         dto.address = store.getAddress();
         dto.phoneNumber = store.getPhoneNumber();
         dto.status = store.getStatus();
