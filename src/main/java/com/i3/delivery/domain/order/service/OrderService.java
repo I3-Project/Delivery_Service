@@ -34,7 +34,10 @@ public class OrderService {
     private final ProductRepository productRepository;
 
     public OrderResponseDto createOrder(OrderRequestDto requestDto, User user) {
-
+        // TODO 검증 부분은 클래스나 메소드로 추출
+        
+        // TODO 의미가 부여된 exception class 를 사용하는 것이 좋음
+        // TODO 공통화된 응답을 위해서 Exception 도 공통화 해야함 -> 이후 globalExceptionHandler와 연결지어야함
         User orderUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
 
@@ -44,9 +47,12 @@ public class OrderService {
         Store store = storeRepository.findById(requestDto.getStoreId())
                 .orElseThrow(() -> new RuntimeException("가게 정보가 없습니다."));
 
+        // TODO store 상태는 enum 으로 관리 => == (enum , static 에 대해 공부)
         if (store.getStatus().equals("CLOSE")) {
             throw new IllegalArgumentException("가게 오픈 전입니다.");
         }
+
+        // TODO 기본 생성자 보다는 builder, factory method 것 사용 권장 (생성자: 실수로 인해서 같은 타입이 존재할 경우, 다른 값이 들어갈 수 있음)
         Order order = new Order(orderUser, store, requestDto.getOrderType(), requestDto.getORequest());
 
         List<OrderProduct> orderProductList = requestDto.getProductList().stream()
@@ -58,6 +64,7 @@ public class OrderService {
                 .collect(Collectors.toList());
 
 
+        // TODO private 메소드로 this.calculateTotalPrice();
         BigDecimal totalPrice = orderProductList.stream()
                 .map(OrderProduct::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -67,18 +74,19 @@ public class OrderService {
         order.setOrderProductList(orderProductList);
 
         Order savedOrder = orderRepository.save(order);
-        OrderResponseDto orderResponseDto = new OrderResponseDto(savedOrder);
 
-        return orderResponseDto;
+        // TODO 생성자 보다는 factory method
+        return new OrderResponseDto(savedOrder);
 
     }
 
     @Transactional
     public void cancleOrder(UUID orderId) {
-
+        
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보가 존재하지 않습니다."));
 
+        // TODO private method
         /* 주문이 생성된 후 5분 이내인지 확인*/
         LocalDateTime currentTime = LocalDateTime.now();
         Duration duration = Duration.between(order.getCreatedAt(), currentTime);
