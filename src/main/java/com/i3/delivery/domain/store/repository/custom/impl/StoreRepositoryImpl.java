@@ -70,17 +70,17 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         Projections.constructor(
                                 StoreReviewResponseDto.class,
                                 store.ratingAvg,
-                                review.id,
+                                /*review.id,
                                 review.store.id,
                                 review.rating,
                                 review.reviewText,
-                                review.userName,
+                                review.userName,*/
                                 review.createdAt
                         )
                 )
                 .from(store)
                 .join(review)
-                .on(store.id.eq(review.store.id))
+                /*.on(store.id.eq(review.store.id))*/
                 .where(store.name.eq(name))
                 .fetch();
 

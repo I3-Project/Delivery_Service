@@ -4,14 +4,20 @@ import com.i3.delivery.domain.order.entity.enums.OrderStatusEnum;
 import com.i3.delivery.domain.product.entity.Product;
 import com.i3.delivery.global.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Entity
 @Getter
+@Table(name = "p_order_product")
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(access= AccessLevel.PUBLIC)
 public class OrderProduct extends BaseEntity {
     @Id
     @UuidGenerator
@@ -52,10 +58,6 @@ public class OrderProduct extends BaseEntity {
         this.order = orderId;
         this.product = productListId;
     }
-
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;*/
 
 
 /*    public OrderProduct(Order orderId, Product productInfoId, Integer quantity) {

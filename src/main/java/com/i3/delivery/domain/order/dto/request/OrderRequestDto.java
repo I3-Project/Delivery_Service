@@ -18,10 +18,8 @@ public class OrderRequestDto {
     private UUID storeId;
     private Integer quantity;
     private Integer totalPrice;
-    private OrderTypeEnum orderType;
+    private String orderType;
     private UUID paymentId;
+    private String oRequest;
     private List<OrderProductListDto> productList;
-    private String createdBy;
-    private String updatedBy;
-    private String deletedBy;
 }
