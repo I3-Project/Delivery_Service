@@ -40,8 +40,8 @@ public class OrderController {
     /* 2. 주문 취소*/
     @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_OWNER') or hasRole('ROLE_CUSTOMER')")
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<Void> cancleOrder(@PathVariable("orderId") UUID orderId) {
-        orderService.cancleOrder(orderId);
+    public ResponseEntity<Void> cancelOrder(@PathVariable("orderId") Long orderId) {
+        orderService.cancelOrder(orderId);
         return ResponseEntity.noContent().build();
     }
 }

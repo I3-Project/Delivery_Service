@@ -11,11 +11,11 @@ import java.util.UUID;
 @Getter
 @Setter
 public class OrderRequestDto {
-    private UUID id;
-    private UUID userId;
-    private UUID addressId;
-    private UUID productId;
-    private UUID storeId;
+    private Long id;
+    private Long userId;
+    private Long addressId;
+    private Long productId;
+    private Long storeId;
     private Integer quantity;
     private Integer totalPrice;
     private String orderType;
