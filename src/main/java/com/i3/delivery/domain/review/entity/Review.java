@@ -1,5 +1,6 @@
 package com.i3.delivery.domain.review.entity;
 
+import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.global.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -30,5 +31,9 @@ public class Review extends BaseEntity {
     @Column(nullable = false)
     @Size(min=1, max=5, message = "평점은 1-5점만 입력 가능합니다.")
     private Integer rating;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
 
 }

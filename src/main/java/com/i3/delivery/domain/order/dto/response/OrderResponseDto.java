@@ -1,5 +1,6 @@
 package com.i3.delivery.domain.order.dto.response;
 
+import com.i3.delivery.domain.order.dto.request.OrderRequestDto;
 import com.i3.delivery.domain.order.dto.response.OrderListResponseDto;
 import com.i3.delivery.domain.order.entity.Order;
 import com.i3.delivery.domain.order.entity.enums.OrderStatusEnum;
@@ -21,7 +22,7 @@ import java.util.UUID;
 public class OrderResponseDto {
 
     private UUID orderId;
-    private UUID userId;
+    private Long userId;
     private UUID addressId;
     private UUID productId;
     private UUID storeId;
@@ -32,28 +33,14 @@ public class OrderResponseDto {
     private Integer quantity;
     private BigDecimal totalPrice;
     private List<OrderListResponseDto> orderList;
-    private LocalDateTime createdAt;
-    private String createdBy;
-    private LocalDateTime updatedAt;
-    private String updatedBy;
-    private LocalDateTime deletedAt;
-    private String deletedBy;
 
-    public static OrderResponseDto reResponseDto(Order order) {
-        return OrderResponseDto.builder()
-                .orderId(order.getId())
-                .userId(order.getUser().getUserId())
-                .addressId(order.getAddress().getId())
-                .productId(order.getProductId())
-                .quantity(order.getQuantity())
-                .amount(order.getTotalPrice())
-                .type(order.getOrderType())
-                .createdAt(order.getCreatedAt())
-                .createdBy(order.getCreatedBy())
-                .updatedAt(order.getUpdatedAt())
-                .updatedBy(order.getUpdatedBy())
-                .build();
+    public OrderResponseDto(Order order) {
+        this.orderId = order.getId();
+        this.userId = order.getUser().getId();
+        this.storeId = order.getStore().getId();
+        this.orderType = order.getOrderType();
+        this.orderStatus = order.getOrderStatus();
+        this.totalPrice = order.getTotalPrice();
+        this.oRequest = order.getORequest();
     }
-
-
 }
