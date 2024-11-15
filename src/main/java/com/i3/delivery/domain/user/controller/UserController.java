@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+// TODO user -> users
 @RequestMapping("/api/user")
 public class UserController {
 
@@ -22,6 +23,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
+        // TODO 없어도 되는지 테스트
         // 유효성 검사 실패 시
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body("입력값 오류: " + bindingResult.getAllErrors());
