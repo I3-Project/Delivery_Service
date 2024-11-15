@@ -6,6 +6,12 @@ import com.i3.delivery.domain.order.entity.Order;
 import com.i3.delivery.domain.order.entity.OrderProduct;
 import com.i3.delivery.domain.order.entity.enums.OrderStatusEnum;
 import com.i3.delivery.domain.order.repository.OrderRepository;
+import com.i3.delivery.domain.product.entity.Product;
+import com.i3.delivery.domain.product.repository.ProductRepository;
+import com.i3.delivery.domain.store.entity.Store;
+import com.i3.delivery.domain.store.repository.StoreRepository;
+import com.i3.delivery.domain.user.entity.User;
+import com.i3.delivery.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,25 +29,29 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    public OrderResponseDto createOrder(OrderRequestDto requestDto/*,User user*/) {
+    private final UserRepository userRepository;
+    private final StoreRepository storeRepository;
+    private final ProductRepository productRepository;
 
-        /*User orderUser = userRepository.findById(user.getUser_id())
+    public OrderResponseDto createOrder(OrderRequestDto requestDto, User user) {
+
+        User orderUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
 
-        Address address = addressRepository.findById(requestDto.getAddressId())
-                .orElseThrow(() -> new RuntimeException("주소를 찾을 수 없습니다."));
+/*        Address address = addressRepository.findById(requestDto.getAddressId())
+                .orElseThrow(() -> new RuntimeException("주소를 찾을 수 없습니다."));*/
 
         Store store = storeRepository.findById(requestDto.getStoreId())
                 .orElseThrow(() -> new RuntimeException("가게 정보가 없습니다."));
 
-        if (!restaurant.getIsOpened()) {
+        if (store.getStatus().equals("CLOSE")) {
             throw new IllegalArgumentException("가게 오픈 전입니다.");
-        } */
-        Order order = new Order(user, store, requestDto.getType());
+        }
+        Order order = new Order(orderUser, store, requestDto.getOrderType(), requestDto.getORequest());
 
         List<OrderProduct> orderProductList = requestDto.getProductList().stream()
                 .map(productListDto -> {
-                    Product productList = ProductRepository.findById(productListDto.getProductId())
+                    Product productList = productRepository.findById(productListDto.getProductId())
                             .orElseThrow(() -> new IllegalArgumentException("등록된 음식 정보가 존재하지 않습니다."));
                     return new OrderProduct(order, productList, productListDto.getQuantity());
                 })
@@ -57,8 +67,10 @@ public class OrderService {
         order.setOrderProductList(orderProductList);
 
         Order savedOrder = orderRepository.save(order);
+        OrderResponseDto orderResponseDto = new OrderResponseDto(savedOrder);
 
-        return OrderResponseDto.reResponseDto(savedOrder);
+        return orderResponseDto;
+
     }
 
     @Transactional

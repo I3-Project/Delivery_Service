@@ -37,9 +37,11 @@ public class StoreService {
 
     public StoreInfoResponseDto getStore(Long id) {
 
-        Store store = storeRepository.findById(id).orElse(null);
+        /*Store store = storeRepository.findById(id).orElse(null);
 
-        return new StoreInfoResponseDto(store);
+        return new StoreInfoResponseDto(store);*/
+
+        return null;
     }
 
     public List<StoreInfoResponseDto> getStoresByKeyword(String keyword) {
@@ -50,21 +52,24 @@ public class StoreService {
     @Transactional
     public StoreEditResponseDto updateStore(Long id, StoreEditRequsetDto storeEditRequsetDto) {
 
-        Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+       /* Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
-        store.update(storeEditRequsetDto);
+        store.update(storeEditRequsetDto)
 
-        return StoreEditResponseDto.from(store);
+        return StoreEditResponseDto.from(store);;*/
+        return null;
     }
 
     @Transactional
     public ResponseEntity<String> deleteStore(Long id) {
 
-        Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        /*Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         store.delete(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
+        return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");*/
+        return null;
+
     }
 
     @Transactional

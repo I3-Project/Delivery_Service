@@ -1,15 +1,10 @@
 package com.i3.delivery.domain.user.entity;
 
-import com.i3.delivery.domain.BaseEntity;
+import com.i3.delivery.global.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedBy;
 
 @Entity
 @Getter

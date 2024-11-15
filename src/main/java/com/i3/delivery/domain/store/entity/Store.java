@@ -1,11 +1,11 @@
 package com.i3.delivery.domain.store.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.i3.delivery.domain.BaseEntity;
 import com.i3.delivery.domain.review.entity.Review;
 import com.i3.delivery.domain.store.dto.StoreEditRequsetDto;
 import com.i3.delivery.domain.store.dto.StoreRegistrationRequestDto;
 import com.i3.delivery.domain.store.enums.StoreStatus;
+import com.i3.delivery.global.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -27,8 +27,8 @@ import java.util.UUID;
 public class Store extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column
     private String uuid;
@@ -89,7 +89,7 @@ public class Store extends BaseEntity {
         if(status == com.i3.delivery.domain.store.enums.StoreStatus.DELETED) {
 
             this.deletedAt = LocalDateTime.now();
-            this.deletedBy = id;
+            //this.deletedBy = id;
         }
     }
 
