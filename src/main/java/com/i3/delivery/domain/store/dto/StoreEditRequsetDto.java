@@ -10,7 +10,7 @@ public class StoreEditRequsetDto {
 
     private String name;
     private String description;
-    private String category;
+    private Long categoryId;
     private String address;
     private String phoneNumber;
     private StoreStatus status;

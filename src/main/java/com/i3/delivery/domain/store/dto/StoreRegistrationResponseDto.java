@@ -15,7 +15,7 @@ public class StoreRegistrationResponseDto {
 
     private String name;
     private String description;
-    private String category;
+    private Long categoryId;
     private long ownerId;
     private String address;
     private String phoneNumber;
@@ -27,7 +27,7 @@ public class StoreRegistrationResponseDto {
         return StoreRegistrationResponseDto.builder()
                 .name(store.getName())
                 .description(store.getDescription())
-                .category(store.getCategory())
+                .categoryId(store.getCategory().getId())
                 .ownerId(store.getUser().getId())
                 .address(store.getAddress())
                 .phoneNumber(store.getPhoneNumber())

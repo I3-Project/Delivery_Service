@@ -30,7 +30,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                                 .or(statusCon(keyword))))
                 .orderBy(
                         store.name.asc(),
-                        store.category.asc(),
+                        store.category.name.asc(),
                         store.status.asc()
                 )
                 .fetch();
@@ -48,7 +48,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
         if (keyword == null || keyword.isEmpty()) {
             return null;
         }
-        return store.category.contains(keyword);
+        return store.category.name.contains(keyword);
     }
 
     private BooleanExpression statusCon(String keyword) {
@@ -56,7 +56,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
             return null;
         }
 
-        for(StoreStatus status : com.i3.delivery.domain.store.enums.StoreStatus.values()) {
+        for(StoreStatus status : StoreStatus.values()) {
             if (status.name().equals(keyword)) {
                 return store.status.eq(status);
             }
