@@ -17,7 +17,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(access= AccessLevel.PUBLIC)
+@Builder
 public class OrderProduct extends BaseEntity {
     @Id
     @UuidGenerator

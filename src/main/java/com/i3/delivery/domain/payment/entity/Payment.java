@@ -15,7 +15,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(access= AccessLevel.PUBLIC)
+@Builder
 public class Payment extends BaseEntity {
 
     @Id
