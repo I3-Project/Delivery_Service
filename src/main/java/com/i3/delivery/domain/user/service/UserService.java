@@ -17,6 +17,8 @@ public class UserService {
 
     public void signup(SignupRequestDto requestDto) {
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+
+        // TODO null 을 넣는다기보다, 값으면 null로 유지하게 두기
         User user = new User(
                 requestDto.getUsername(),
                 encodedPassword,
