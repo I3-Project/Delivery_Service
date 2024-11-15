@@ -5,11 +5,9 @@ import com.i3.delivery.domain.product.entity.Product;
 import com.i3.delivery.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -20,8 +18,8 @@ import java.util.UUID;
 @Builder
 public class OrderProduct extends BaseEntity {
     @Id
-    @UuidGenerator
-    private UUID orderFoodId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long orderProductId;
 
     @Column(nullable = false)
     private Integer quantity;

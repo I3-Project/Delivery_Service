@@ -28,10 +28,13 @@ import java.util.UUID;
 public class Order extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    // TODO UUID -> IDENTITY (db 도 auto increment)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // TODO Long
+    private Long id;
 
     @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID orderUId;
 
     @Column(nullable = false)
@@ -77,10 +80,9 @@ public class Order extends BaseEntity {
 
     @PreUpdate
     public void updateDeleteField(){
-        if(orderStatus == orderStatus.CANCELED) {
-
+        if(orderStatus == orderStatus.DELETED) {
             this.deletedAt = LocalDateTime.now();
-            this.deletedBy = getUser().getNickname();
+            this.deletedBy = getUserName();
         }
     }
 

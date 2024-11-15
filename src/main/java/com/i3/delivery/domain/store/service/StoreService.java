@@ -37,11 +37,9 @@ public class StoreService {
 
     public StoreInfoResponseDto getStore(Long id) {
 
-        /*Store store = storeRepository.findById(id).orElse(null);
+        Store store = storeRepository.findById(id).orElse(null);
 
-        return new StoreInfoResponseDto(store);*/
-
-        return null;
+        return new StoreInfoResponseDto(store);
     }
 
     public List<StoreInfoResponseDto> getStoresByKeyword(String keyword) {
@@ -52,26 +50,25 @@ public class StoreService {
     @Transactional
     public StoreEditResponseDto updateStore(Long id, StoreEditRequsetDto storeEditRequsetDto) {
 
-       /* Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+       Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
-        store.update(storeEditRequsetDto)
+        store.update(storeEditRequsetDto);
 
-        return StoreEditResponseDto.from(store);;*/
-        return null;
+        return StoreEditResponseDto.from(store);
     }
 
     @Transactional
     public ResponseEntity<String> deleteStore(Long id) {
 
-        /*Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         store.delete(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");*/
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
 
     }
 
+    // TODO 여기서 transanctional 이 필요할까요?? 만약 쓴다면 readOnly = true 로 설정해주세요.
     @Transactional
     public List<StoreReviewResponseDto> getStoreAvgAndReviews(String name) {
 

@@ -27,11 +27,12 @@ import java.util.UUID;
 public class Store extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column
-    private String uuid;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID uuid;
 
     @Size(min = 2, max = 20, message = "이름은 최소 2자입니다.")
     @NotBlank(message = "이름을 입력해주세요.")
@@ -94,7 +95,7 @@ public class Store extends BaseEntity {
     }
 
     public Store(StoreRegistrationRequestDto storeRegistrationRequestDto) {
-        this.uuid = UUID.randomUUID().toString();
+        this.uuid = UUID.fromString(UUID.randomUUID().toString());
         this.name = storeRegistrationRequestDto.getName();
         this.description = storeRegistrationRequestDto.getDescription();
         this.category = storeRegistrationRequestDto.getCategory();
