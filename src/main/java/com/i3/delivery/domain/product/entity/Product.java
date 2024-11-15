@@ -1,4 +1,4 @@
-package com.i3.delivery.product.entity;
+package com.i3.delivery.domain.product.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
