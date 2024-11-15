@@ -72,19 +72,21 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         Projections.constructor(
                                 StoreReviewResponseDto.class,
                                 store.ratingAvg,
-                                /*review.id,
+                                review.reviewId,
                                 review.store.id,
                                 review.rating,
-                                review.reviewText,
-                                review.userName,*/
+                                review.content,
+//                                review.userName,
                                 review.createdAt
                         )
                 )
                 .from(store)
                 .join(review)
-                /*.on(store.id.eq(review.store.id))*/
+                .on(store.id.eq(review.store.id))
                 .where(store.name.eq(name))
                 .fetch();
+
+        long totalCount = reviews.size();
 
         double average = reviews.stream()
                 .map(StoreReviewResponseDto::getRating)
@@ -94,6 +96,11 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
 
         queryFactory.update(store)
                 .set(store.ratingAvg, (int)average)
+                .where(store.name.eq(name))
+                .execute();
+
+        queryFactory.update(store)
+                .set(store.totalReviews, (int)totalCount)
                 .where(store.name.eq(name))
                 .execute();
 

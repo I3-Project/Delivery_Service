@@ -15,7 +15,5 @@ public class StoreRegistrationRequestDto {
     private String address;
     private String phoneNumber;
     private StoreStatus status;
-    private int totalReviews;
-    private int ratingAvg;
     private String createdBy;
 }
