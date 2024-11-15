@@ -1,7 +1,7 @@
 package com.i3.delivery.domain.store.dto;
 
 import com.i3.delivery.domain.store.entity.Store;
-import com.i3.delivery.domain.store.enums.Status;
+import com.i3.delivery.domain.store.enums.StoreStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +14,7 @@ public class StoreEditResponseDto {
     private String category;
     private String address;
     private String phoneNumber;
-    private Status status;
+    private StoreStatus status;
 
     public static StoreEditResponseDto from(Store store) {
         StoreEditResponseDto dto = new StoreEditResponseDto();

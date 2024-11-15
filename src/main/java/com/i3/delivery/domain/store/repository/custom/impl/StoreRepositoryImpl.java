@@ -2,7 +2,7 @@ package com.i3.delivery.domain.store.repository.custom.impl;
 
 import com.i3.delivery.domain.store.dto.StoreReviewResponseDto;
 import com.i3.delivery.domain.store.entity.Store;
-import com.i3.delivery.domain.store.enums.Status;
+import com.i3.delivery.domain.store.enums.StoreStatus;
 import com.i3.delivery.domain.store.repository.custom.StoreRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -54,7 +54,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
             return null;
         }
 
-        for(Status status : Status.values()) {
+        for(StoreStatus status : com.i3.delivery.domain.store.enums.StoreStatus.values()) {
             if (status.name().equals(keyword)) {
                 return store.status.eq(status);
             }
