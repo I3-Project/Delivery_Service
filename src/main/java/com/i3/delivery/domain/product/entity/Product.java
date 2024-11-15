@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -29,7 +30,7 @@ public class Product{
     private String description;
 
     @Column
-    private int price;
+    private BigDecimal price;
 
     @Column
     private int stock;

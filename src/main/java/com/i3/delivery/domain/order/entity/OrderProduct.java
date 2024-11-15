@@ -1,6 +1,7 @@
 package com.i3.delivery.domain.order.entity;
 
 import com.i3.delivery.domain.order.entity.enums.OrderStatusEnum;
+import com.i3.delivery.domain.product.entity.Product;
 import com.i3.delivery.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -46,8 +47,8 @@ public class OrderProduct extends BaseEntity {
 
     public OrderProduct(Order orderId, Product productListId, Integer quantity) {
         this.quantity = quantity;
-        this.price = productListId.getProductPrice();
-        this.totalPrice = productListId.getProductPrice().multiply(BigDecimal.valueOf(quantity));
+        this.price = productListId.getPrice();
+        this.totalPrice = productListId.getPrice().multiply(BigDecimal.valueOf(quantity));
         this.order = orderId;
         this.product = productListId;
     }
