@@ -31,7 +31,6 @@ public class Store extends BaseEntity {
     private Long id;
 
     @Column
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
 
     @Size(min = 2, max = 20, message = "이름은 최소 2자입니다.")
