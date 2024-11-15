@@ -1,7 +1,5 @@
 package com.i3.delivery.domain.order.dto.response;
 
-import com.i3.delivery.domain.order.dto.request.OrderRequestDto;
-import com.i3.delivery.domain.order.dto.response.OrderListResponseDto;
 import com.i3.delivery.domain.order.entity.Order;
 import com.i3.delivery.domain.order.entity.enums.OrderStatusEnum;
 import com.i3.delivery.domain.order.entity.enums.OrderTypeEnum;
@@ -11,9 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -21,14 +17,14 @@ import java.util.UUID;
 @Builder
 public class OrderResponseDto {
 
-    private UUID orderId;
+    private Long orderId;
     private Long userId;
-    private UUID addressId;
-    private UUID productId;
-    private UUID storeId;
+    private Long addressId;
+    private Long productId;
+    private Long storeId;
     private OrderTypeEnum orderType;
     private OrderStatusEnum orderStatus;
-    private UUID paymentId;
+    private Long paymentId;
     private String oRequest;
     private Integer quantity;
     private BigDecimal totalPrice;
