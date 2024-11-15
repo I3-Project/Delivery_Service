@@ -1,11 +1,11 @@
 package com.i3.delivery.domain.store.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.i3.delivery.domain.BaseEntity;
 import com.i3.delivery.domain.review.entity.Review;
 import com.i3.delivery.domain.store.dto.StoreEditRequsetDto;
 import com.i3.delivery.domain.store.dto.StoreRegistrationRequestDto;
 import com.i3.delivery.domain.store.enums.StoreStatus;
+import com.i3.delivery.global.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -27,11 +27,11 @@ import java.util.UUID;
 public class Store extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @Column
-    private String uuid;
+    @Column(nullable = false)
+    private UUID storeUId;
 
     @Size(min = 2, max = 20, message = "이름은 최소 2자입니다.")
     @NotBlank(message = "이름을 입력해주세요.")
@@ -80,7 +80,7 @@ public class Store extends BaseEntity {
 //    @OnDelete(action = OnDeleteAction.SET_NULL)
 //    private User ownerId;
 
-    @OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Review> reviewList = new ArrayList<>();
 
@@ -94,7 +94,7 @@ public class Store extends BaseEntity {
     }
 
     public Store(StoreRegistrationRequestDto storeRegistrationRequestDto) {
-        this.uuid = UUID.randomUUID().toString();
+        this.storeUId = UUID.randomUUID();
         this.name = storeRegistrationRequestDto.getName();
         this.description = storeRegistrationRequestDto.getDescription();
         this.category = storeRegistrationRequestDto.getCategory();
