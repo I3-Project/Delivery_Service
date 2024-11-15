@@ -5,7 +5,7 @@ import com.i3.delivery.domain.BaseEntity;
 import com.i3.delivery.domain.review.entity.Review;
 import com.i3.delivery.domain.store.dto.StoreEditRequsetDto;
 import com.i3.delivery.domain.store.dto.StoreRegistrationRequestDto;
-import com.i3.delivery.domain.store.enums.Status;
+import com.i3.delivery.domain.store.enums.StoreStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -54,7 +54,7 @@ public class Store extends BaseEntity {
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private StoreStatus status;
 
     @Column
     private int totalReviews;
@@ -86,7 +86,7 @@ public class Store extends BaseEntity {
 
     @PreUpdate
     public void updateDeleteField(){
-        if(status == Status.DELETED) {
+        if(status == com.i3.delivery.domain.store.enums.StoreStatus.DELETED) {
 
             this.deletedAt = LocalDateTime.now();
             this.deletedBy = id;
@@ -100,7 +100,7 @@ public class Store extends BaseEntity {
         this.category = storeRegistrationRequestDto.getCategory();
         this.address = storeRegistrationRequestDto.getAddress();
         this.phoneNumber = storeRegistrationRequestDto.getPhoneNumber();
-        this.status = Status.CLOSE;
+        this.status = com.i3.delivery.domain.store.enums.StoreStatus.CLOSE;
         this.totalReviews = storeRegistrationRequestDto.getTotalReviews();
         this.ratingAvg = storeRegistrationRequestDto.getRatingAvg();
         this.createdBy = storeRegistrationRequestDto.getCreatedBy();
@@ -120,6 +120,6 @@ public class Store extends BaseEntity {
     }
 
     public void delete(Long id) {
-        this.status = Status.DELETED;
+        this.status = com.i3.delivery.domain.store.enums.StoreStatus.DELETED;
     }
 }

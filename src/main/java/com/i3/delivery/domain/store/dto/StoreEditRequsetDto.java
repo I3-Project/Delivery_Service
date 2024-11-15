@@ -1,6 +1,6 @@
 package com.i3.delivery.domain.store.dto;
 
-import com.i3.delivery.domain.store.enums.Status;
+import com.i3.delivery.domain.store.enums.StoreStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +13,7 @@ public class StoreEditRequsetDto {
     private String category;
     private String address;
     private String phoneNumber;
-    private Status status;
+    private StoreStatus status;
     private int totalReviews;
     private int ratingAvg;
 }

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Status {
+public enum StoreStatus {
 
     OPEN("OPEN"),
     CLOSE("CLOSE"),
