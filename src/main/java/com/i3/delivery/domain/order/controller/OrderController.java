@@ -16,18 +16,15 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-// TODO order -> orders   
-@RequestMapping("/api/order")
-// TODO @Validated 이걸 써야 동작하는 지 테스트
+@RequestMapping("/api")
 public class OrderController {
 
-    // TODO final 을 써야 하는 이유 공부: lombok
     private final OrderService orderService;
 
     /* 1. 주문 등록 */
     // TODO hasRole 대신 hasAnyAuthoriy('MANAGER', 'OWNER', 'CUSTOMER')
     /*@PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'CUSTOMER')")
-    @PostMapping
+    @PostMapping("/orders")
     public OrderResponseDto createOrder(
         // TODO @Valid
             @Valid @RequestBody OrderRequestDto request,
@@ -38,7 +35,7 @@ public class OrderController {
 
     /* 2. 주문 취소 */
     @PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'CUSTOMER')")
-    @PostMapping("/{orderId}/cancel")
+    @PostMapping("/orders/{orderId}/cancel")
     public ResponseEntity<Void> cancelOrder(
             @PathVariable("orderId") Long orderId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -49,7 +46,7 @@ public class OrderController {
 
     // 3. 주문 내역 전체 조회 (관리자)
     @PreAuthorize("hasAnyAuthority('MANAGER', 'MASTER')")
-    @GetMapping
+    @GetMapping("/orders")
     public ResponseEntity<Page<OrderListResponseDto>> getOrderList(
             @PageableDefault(page = 0, size = 10, sort = "createdAt",
                     direction = Sort.Direction.DESC) Pageable pageable,
@@ -89,7 +86,7 @@ public class OrderController {
 
     /* 6. 주문 삭제 */
     @PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'CUSTOMER')")
-    @DeleteMapping("/{orderId}/")
+    @DeleteMapping("/orders/{orderId}")
     public ResponseEntity<Void> deleteOrder(
             @PathVariable("orderId") Long orderId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -99,8 +96,8 @@ public class OrderController {
     }
 
     /* 7.주문 상세 조회 */
-    @PreAuthorize("hasAnyAuthority('MASTER', 'OWNER', 'CUSTOMER')")
-    @GetMapping("/{order_id}/details")
+    @PreAuthorize("hasAnyAuthority('MASTER', 'OWNER', 'USER')")
+    @GetMapping("/orders/{order_id}/details")
     public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable Long orderId) {
         OrderResponseDto order = orderService.getOrderDetails(orderId);
         return ResponseEntity.ok(order);
