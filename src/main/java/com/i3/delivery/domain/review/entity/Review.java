@@ -2,6 +2,7 @@ package com.i3.delivery.domain.review.entity;
 
 import com.i3.delivery.domain.order.entity.Order;
 import com.i3.delivery.domain.order.entity.enums.OrderTypeEnum;
+import com.i3.delivery.domain.review.dto.ReviewRequestDto;
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.security.UserDetailsImpl;
@@ -74,5 +75,16 @@ public class Review extends BaseEntity {
             return userDetailsImpl.getUser().getNickname();
         }
         return null;
+    }
+
+    public static Review createReview(ReviewRequestDto request, User user, Order order, Store store) {
+        return Review.builder()
+                .user(user)
+                .order(order)
+                .store(store)
+                .content(request.getContent())
+                .rating(request.getRating())
+                .reviewStatus(request.getReviewStatus())
+                .build();
     }
 }
