@@ -34,7 +34,7 @@ public class OrderController {
     }*/
 
     /* 2. 주문 취소 */
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'USER')")
     @PostMapping("/orders/{orderId}/cancel")
     public ResponseEntity<Void> cancelOrder(
             @PathVariable("orderId") Long orderId,
@@ -45,7 +45,7 @@ public class OrderController {
     }
 
     // 3. 주문 내역 전체 조회 (관리자)
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'MASTER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER', 'USER')")
     @GetMapping("/orders")
     public ResponseEntity<Page<OrderListResponseDto>> getOrderList(
             @PageableDefault(page = 0, size = 10, sort = "createdAt",
@@ -57,7 +57,7 @@ public class OrderController {
     }
 
     /* 4. 주문 내역 조회 (OWNER) */
-    @PreAuthorize("hasAnyAuthority('MASTER', 'OWNER')")
+    @PreAuthorize("hasAnyAuthority('MASTER', 'USER')")
     @GetMapping("orders/{storeId}")
     public ResponseEntity<Page<OrderListResponseDto>> getStoreOrderList(
             @PageableDefault(page = 0, size = 10, sort = "createdAt",
@@ -85,7 +85,7 @@ public class OrderController {
     }
 
     /* 6. 주문 삭제 */
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'USER')")
     @DeleteMapping("/orders/{orderId}")
     public ResponseEntity<Void> deleteOrder(
             @PathVariable("orderId") Long orderId,
