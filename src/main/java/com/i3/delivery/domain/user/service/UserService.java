@@ -55,4 +55,17 @@ public class UserService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    public UserResponseDto getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .address(user.getAddress())
+                .build();
+    }
 }
