@@ -1,7 +1,6 @@
 package com.i3.delivery.domain.review.entity;
 
 import com.i3.delivery.domain.order.entity.Order;
-import com.i3.delivery.domain.order.entity.enums.OrderTypeEnum;
 import com.i3.delivery.domain.review.dto.ReviewRequestDto;
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.user.entity.User;
@@ -64,7 +63,7 @@ public class Review extends BaseEntity {
     private String deletedBy;
     @PreUpdate
     public void updateDeleteField(){
-        if(reviewStatus == ReviewStatusEnum.DELETED) {
+        if (reviewStatus == ReviewStatusEnum.DELETED) {
             this.deletedAt = LocalDateTime.now();
             this.deletedBy = getUserName();
         }
@@ -77,6 +76,8 @@ public class Review extends BaseEntity {
         return null;
     }
 
+    /* 리뷰 등록 */
+    @Builder
     public static Review createReview(ReviewRequestDto request, User user, Order order, Store store) {
         return Review.builder()
                 .user(user)
@@ -84,7 +85,16 @@ public class Review extends BaseEntity {
                 .store(store)
                 .content(request.getContent())
                 .rating(request.getRating())
-                .reviewStatus(request.getReviewStatus())
+                .reviewStatus(ReviewStatusEnum.UPLOADED)
+                .build();
+    }
+
+    /* 리뷰 수정 */
+    public static void updateReview(String content, Integer rating) {
+        Review.builder()
+                .content(content)
+                .rating(rating)
+                .reviewStatus(ReviewStatusEnum.FIXED)
                 .build();
     }
 }

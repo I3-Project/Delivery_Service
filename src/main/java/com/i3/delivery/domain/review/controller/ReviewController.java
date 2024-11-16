@@ -7,12 +7,13 @@ import com.i3.delivery.domain.user.security.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -27,5 +28,15 @@ public class ReviewController {
     public ReviewResponseDto createReview(@RequestBody ReviewRequestDto request,
                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return reviewService.createReview(request, userDetails.getUser().getId());
+    }
+
+    /* 2. 리뷰 수정 */
+    @PreAuthorize("hasAnyAuthority('MANAGER', 'MASTER', 'USER')")
+    @PatchMapping("/{review_id}")
+    public ReviewResponseDto updateReview(@RequestBody ReviewRequestDto request,
+                                          @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                          @PathVariable Long reviewId) {
+
+        return reviewService.updateReview(request, reviewId, userDetails.getUser().getId());
     }
 }

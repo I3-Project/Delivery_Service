@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ReviewStatusEnum {
     UPLOADED("REVIEW_STATUS_UPLOADED"),
+    FIXED("REVIEW_STATUS_FIXED"),
     DELETED("REVIEW_STATUS_DELETED");
 
     private final String status;
