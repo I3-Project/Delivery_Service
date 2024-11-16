@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +40,13 @@ public class UserController {
         return ResponseEntity.ok("회원가입 성공");
     }
 
-//    @GetMapping("/users")
-//    public ResponseEntity<List>
+
+    @GetMapping("/users")
+    @PreAuthorize("hasAnyRole('MANAGER', 'MASTER')")
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        List<UserResponseDto> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
 
 
 

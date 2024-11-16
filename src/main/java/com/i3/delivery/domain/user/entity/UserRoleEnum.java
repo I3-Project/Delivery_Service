@@ -3,7 +3,7 @@ package com.i3.delivery.domain.user.entity;
 public enum UserRoleEnum {
     USER(Authority.USER),
     OWNER(Authority.OWNER),
-    MANGER(Authority.MANAGER),
+    MANAGER(Authority.MANAGER),
     MASTER(Authority.MASTER);
 
     private final String authority;

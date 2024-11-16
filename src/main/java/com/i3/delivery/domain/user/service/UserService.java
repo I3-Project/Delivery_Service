@@ -2,6 +2,7 @@ package com.i3.delivery.domain.user.service;
 
 import com.i3.delivery.domain.user.dto.LoginRequestDto;
 import com.i3.delivery.domain.user.dto.SignupRequestDto;
+import com.i3.delivery.domain.user.dto.UserResponseDto;
 import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.entity.UserRoleEnum;
 import com.i3.delivery.domain.user.jwt.JwtUtil;
@@ -11,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,5 +42,17 @@ public class UserService {
     }
 
 
-
+    public List<UserResponseDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> UserResponseDto.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .nickname(user.getNickname())
+                        .email(user.getEmail())
+                        .address(user.getAddress())
+                        .role(user.getRole())
+                        .build())
+                .collect(Collectors.toList());
+    }
 }
