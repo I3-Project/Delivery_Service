@@ -2,6 +2,7 @@ package com.i3.delivery.domain.user.controller;
 
 import com.i3.delivery.domain.user.dto.LoginRequestDto;
 import com.i3.delivery.domain.user.dto.SignupRequestDto;
+import com.i3.delivery.domain.user.dto.UserResponseDto;
 import com.i3.delivery.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -10,9 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -30,11 +34,15 @@ public class UserController {
             String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
             return ResponseEntity.badRequest().body(errorMessage);
         }
-
         // 유효성 검사 통과 시
         userService.signup(requestDto);
         return ResponseEntity.ok("회원가입 성공");
     }
+
+//    @GetMapping("/users")
+//    public ResponseEntity<List>
+
+
 
 //    @PostMapping("/users/login")
 //    public ResponseEntity<String> login(LoginRequestDto requestDto, HttpServletResponse res) {

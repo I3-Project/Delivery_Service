@@ -34,5 +34,8 @@ public class SignupRequestDto {
     @NotBlank(message = "주소를 입력해주세요!")
     private String address;
 
+    @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "유효한 전화번호 형식을 입력해주세요! (예: 010-1234-5678)")
+    @NotBlank(message = "전화번호를 입력해주세요!")
+    private String phone;
 
 }

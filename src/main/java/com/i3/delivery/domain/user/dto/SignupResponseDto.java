@@ -11,7 +11,7 @@ public class SignupResponseDto {
     private String nickname;
     private String email;
     private String address;
-
-    private UserRoleEnum role = UserRoleEnum.USER;
+    private String phone;
+    private UserRoleEnum role;
 
 }
