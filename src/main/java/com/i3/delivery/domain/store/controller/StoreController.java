@@ -19,7 +19,7 @@ public class StoreController {
 
     private final StoreService storeService;
 
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'MASTER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_MANAGER')")
     @PostMapping
     public StoreRegistrationResponseDto createStore(@Validated @RequestBody StoreRegistrationRequestDto storeRegistrationRequestDto,
                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -51,14 +51,14 @@ public class StoreController {
         return storeService.getStoreAvgAndReviews(name);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'MASTER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_MASTER')")
     @PatchMapping("/{id}")
     public StoreEditResponseDto updateStore(@PathVariable(name = "id") Long id, @RequestBody StoreEditRequsetDto storeEditRequsetDto) {
 
         return storeService.updateStore(id, storeEditRequsetDto);
     }
 
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'MASTER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_MASTER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteStore(@PathVariable(name = "id") Long id) {
 

@@ -1,27 +1,34 @@
 package com.i3.delivery.domain.product.entity;
 
+import com.i3.delivery.domain.product.enums.ProductStatus;
+import com.i3.delivery.domain.store.entity.Store;
+import com.i3.delivery.domain.user.entity.User;
+import com.i3.delivery.domain.user.security.UserDetailsImpl;
+import com.i3.delivery.global.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
+@Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Product{
+@Table(name ="p_products")
+public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String uuid;
+    @Column
+    private UUID uuid;
 
     @Column
     private String name;
@@ -36,13 +43,7 @@ public class Product{
     private int stock;
 
     @Column
-    private boolean isDeleted;
-
-    @Column
-    private String createdBy;
-
-    @Column
-    private String updatedBy;
+    private ProductStatus status;
 
     @Column
     private LocalDateTime deletedAt;
@@ -50,6 +51,30 @@ public class Product{
     @Column
     private String deletedBy;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @PreUpdate
+    public void updateDeleteField(){
+        if(status == ProductStatus.DELETED) {
+
+            this.deletedAt = LocalDateTime.now();
+            this.deletedBy = getUserNickName();
+        }
+    }
+
+    private static String getUserNickName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl userDetailsImpl) {
+            return userDetailsImpl.getUser().getNickname();
+        }
+        return null;
+    }
 
 
 }

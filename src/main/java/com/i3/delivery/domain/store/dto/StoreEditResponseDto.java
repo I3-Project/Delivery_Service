@@ -15,6 +15,8 @@ public class StoreEditResponseDto {
     private String address;
     private String phoneNumber;
     private StoreStatus status;
+    private int totalReview;
+    private int ratingAvg;
 
     public static StoreEditResponseDto from(Store store) {
         StoreEditResponseDto dto = new StoreEditResponseDto();
@@ -24,6 +26,8 @@ public class StoreEditResponseDto {
         dto.address = store.getAddress();
         dto.phoneNumber = store.getPhoneNumber();
         dto.status = store.getStatus();
+        dto.totalReview = store.getTotalReviews();
+        dto.ratingAvg = store.getRatingAvg();
         return dto;
     }
 }
