@@ -44,7 +44,7 @@ public class UserController {
 
     // 회원정보목록 조회
     @GetMapping("/users")
-    @PreAuthorize("hasAnyRole('MANAGER', 'MASTER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_MASTER')")
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         List<UserResponseDto> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
