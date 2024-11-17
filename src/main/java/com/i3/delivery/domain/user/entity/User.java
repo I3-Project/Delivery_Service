@@ -45,9 +45,6 @@ public class User extends BaseEntity {
     private Boolean is_deleted;
 
     @Column
-    private String updated_by;
-
-    @Column
     private String deleted_at;
 
     @Column
@@ -64,6 +61,7 @@ public class User extends BaseEntity {
         this.role = role != null ? role : UserRoleEnum.USER; // 기본값 설정
         this.is_deleted = false;
     }
+
 
     // 유저 정보 수정
     public void update(UserEditRequestDto requestDto, PasswordEncoder passwordEncoder) {

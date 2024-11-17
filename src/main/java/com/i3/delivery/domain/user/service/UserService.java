@@ -1,9 +1,6 @@
 package com.i3.delivery.domain.user.service;
 
-import com.i3.delivery.domain.user.dto.LoginRequestDto;
-import com.i3.delivery.domain.user.dto.SignupRequestDto;
-import com.i3.delivery.domain.user.dto.UserEditRequestDto;
-import com.i3.delivery.domain.user.dto.UserResponseDto;
+import com.i3.delivery.domain.user.dto.*;
 import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.entity.UserRoleEnum;
 import com.i3.delivery.domain.user.jwt.JwtUtil;
@@ -43,6 +40,7 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
+        user.setCreatedBy(user.getUsername());
 
     }
 
@@ -83,7 +81,17 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         user.update(requestDto, passwordEncoder);
+        user.setUpdatedBy(username);
 
     }
 
+    @Transactional
+    public void editUserRole(UserRoleEditRequestDto requestDto) {
+        String username = requestDto.getUsername();
+        String role = requestDto.getRole();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        user.setRole(UserRoleEnum.valueOf(role));
+    }
 }

@@ -1,9 +1,6 @@
 package com.i3.delivery.domain.user.controller;
 
-import com.i3.delivery.domain.user.dto.LoginRequestDto;
-import com.i3.delivery.domain.user.dto.SignupRequestDto;
-import com.i3.delivery.domain.user.dto.UserEditRequestDto;
-import com.i3.delivery.domain.user.dto.UserResponseDto;
+import com.i3.delivery.domain.user.dto.*;
 import com.i3.delivery.domain.user.entity.UserRoleEnum;
 import com.i3.delivery.domain.user.security.UserDetailsImpl;
 import com.i3.delivery.domain.user.service.UserService;
@@ -60,6 +57,7 @@ public class UserController {
 
     @PatchMapping("/users")
     public ResponseEntity<String> editUserInfo(@Valid @RequestBody UserEditRequestDto requestDto, BindingResult bindingResult) {
+
         // 유효성 검사 실패 시
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
@@ -67,7 +65,15 @@ public class UserController {
         }
         // 유효성 검사 통과 시
         userService.editUserInfo(requestDto);
+
         return ResponseEntity.ok("회원정보 수정 성공");
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER')")
+    @PatchMapping("/users/role")
+    public ResponseEntity<String> editUserRole(@RequestBody UserRoleEditRequestDto requestDto) {
+        userService.editUserRole(requestDto);
+        return ResponseEntity.ok("권한 부여 성공");
     }
 
 
