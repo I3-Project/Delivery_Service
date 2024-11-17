@@ -15,9 +15,14 @@ import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.repository.UserRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -87,5 +92,21 @@ public class PaymentService {
         }
 
         payment.setPaymentStatus(request.getPaymentStatus());
+    }
+
+    public Page<PaymentResponseDto> userPaymentList(Pageable pageable, Integer size, Long userId) {
+        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        Page<Payment> paymentList = paymentRepository.findAllByUser_Id(userId, pageable);
+
+        return paymentList.map(PaymentResponseDto::new);
+    }
+
+    public Page<PaymentResponseDto> ownerPaymentList(Pageable pageable, Integer size, Long storeId) {
+        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        Page<Payment> paymentList = paymentRepository.findAllByStore_Id(storeId, pageable);
+
+        return paymentList.map(PaymentResponseDto::new);
     }
 }

@@ -6,6 +6,11 @@ import com.i3.delivery.domain.payment.dto.PaymentStatusRequestDto;
 import com.i3.delivery.domain.payment.service.PaymentService;
 import com.i3.delivery.domain.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,6 +47,7 @@ public class PaymentController {
     }
 
     /* 3. 결제 상태 변경 */
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_OWNER')")
     @PutMapping("/payments/{paymentId}")
     public ResponseEntity<Void> modifyPaymentStatus(@RequestBody PaymentStatusRequestDto request,
                                                    @PathVariable Long paymentId
@@ -49,5 +55,33 @@ public class PaymentController {
         paymentService.modifyStatusPayment(request, paymentId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    /* 결제 목록 조회 (USER) */
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER')")
+    @GetMapping("/payments/user")
+    public ResponseEntity<Page<PaymentResponseDto>> userPaymentList(
+            @PageableDefault(page = 0, size = 10, sort = "createdAt",
+            direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam Integer size,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        Page<PaymentResponseDto> responseDto = paymentService.userPaymentList(pageable, size, userDetails.getUser().getId());
+
+        return ResponseEntity.ok(responseDto);
+    }
+
+    /* 결제 목록 조회 (storeId) */
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_OWNER')")
+    @GetMapping("/payments/{storeId}")
+    public ResponseEntity<Page<PaymentResponseDto>> ownerPaymentList(
+            @PageableDefault(page = 0, size = 10, sort = "createdAt",
+                    direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam Integer size,
+            @PathVariable("storeId") Long storeId
+    ) {
+        Page<PaymentResponseDto> responseDto = paymentService.ownerPaymentList(pageable, size, storeId);
+
+        return ResponseEntity.ok(responseDto);
     }
 }

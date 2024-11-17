@@ -18,6 +18,13 @@ public class PaymentResponseDto {
     private String pgId;
     private BigDecimal totalPrice;
 
+    public PaymentResponseDto(Payment payment) {
+        this.paymentId = payment.getId();
+        this.userId = payment.getUser().getId();
+        this.pgId = payment.getPgId();
+        this.totalPrice = payment.getTotalPrice();
+    }
+
     public static PaymentResponseDto toResponseDto(Payment payment, Long userId) {
         return PaymentResponseDto.builder()
                 .paymentId(payment.getId())
