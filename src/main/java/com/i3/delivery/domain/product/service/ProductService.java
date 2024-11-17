@@ -9,6 +9,7 @@ import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.store.service.StoreService;
 import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.repository.UserRepository;
+import com.i3.delivery.global.exception.product.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,7 +56,7 @@ public class ProductService {
 
     public ProductInfoResponseDto getProduct(Long id) {
 
-        Product product = productRepository.findById(id).orElseThrow(IllegalAccessError::new);
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         return ProductInfoResponseDto.fromEntity(product);
     }
@@ -71,7 +72,7 @@ public class ProductService {
     @Transactional
     public ProductEditResponseDto updateProduct(Long id, ProductEditRequestDto productEditRequestDto) {
 
-        Product product = productRepository.findById(id).orElseThrow(IllegalAccessError::new);
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         product.update(productEditRequestDto);
 
@@ -81,7 +82,7 @@ public class ProductService {
     @Transactional
     public ResponseEntity<String> deleteProduct(Long id) {
 
-        Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         product.delete();
 
@@ -91,7 +92,7 @@ public class ProductService {
     @Transactional
     public ResponseEntity<String> deleteProductAll(Long id) {
 
-        Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         productRepository.delete(product);
 

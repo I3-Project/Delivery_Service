@@ -9,6 +9,7 @@ import com.i3.delivery.domain.store.repository.StoreRepository;
 import com.i3.delivery.domain.store.repository.custom.impl.StoreRepositoryImpl;
 import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.repository.UserRepository;
+import com.i3.delivery.global.exception.store.StoreNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -81,7 +82,7 @@ public class StoreService {
     @Transactional
     public StoreEditResponseDto updateStore(Long id, StoreEditRequsetDto storeEditRequsetDto) {
 
-        Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Store store = storeRepository.findById(id).orElseThrow(StoreNotFoundException::new);
 
         Category category = findCategory(storeEditRequsetDto);
         store.update(storeEditRequsetDto,category);
@@ -97,7 +98,7 @@ public class StoreService {
     @Transactional
     public ResponseEntity<String> deleteStore(Long id) {
 
-        Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Store store = storeRepository.findById(id).orElseThrow(StoreNotFoundException::new);
 
         store.delete();
 
@@ -114,6 +115,6 @@ public class StoreService {
 
     public Store findStore(Long storeId) {
 
-        return storeRepository.findById(storeId).orElseThrow(IllegalArgumentException::new);
+        return storeRepository.findById(storeId).orElseThrow(StoreNotFoundException::new);
     }
 }
