@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -45,7 +47,7 @@ public class User extends BaseEntity {
     private Boolean is_deleted;
 
     @Column
-    private String deleted_at;
+    private LocalDateTime deleted_at;
 
     @Column
     private String deleted_by;
