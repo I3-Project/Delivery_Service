@@ -1,6 +1,7 @@
 package com.i3.delivery.domain.product.dto;
 
 import com.i3.delivery.domain.product.entity.Product;
+import com.i3.delivery.domain.product.enums.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class ProductRegistrationResponseDto {
     private int stock;
     private Long storeId;
     private String storeName;
+    private ProductStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -32,8 +34,9 @@ public class ProductRegistrationResponseDto {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .stock(product.getStock())
-                .storeId(product.getId())
-                .storeName(product.getName())
+                .storeId(product.getStore().getId())
+                .storeName(product.getStore().getName())
+                .status(product.getStatus())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();

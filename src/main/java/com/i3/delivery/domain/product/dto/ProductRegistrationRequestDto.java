@@ -14,5 +14,4 @@ public class ProductRegistrationRequestDto {
     private BigDecimal price;
     private int stock;
     private Long storeId;
-    private String storeName;
 }

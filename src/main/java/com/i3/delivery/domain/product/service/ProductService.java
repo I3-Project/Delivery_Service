@@ -3,6 +3,7 @@ package com.i3.delivery.domain.product.service;
 import com.i3.delivery.domain.product.dto.ProductRegistrationRequestDto;
 import com.i3.delivery.domain.product.dto.ProductRegistrationResponseDto;
 import com.i3.delivery.domain.product.entity.Product;
+import com.i3.delivery.domain.product.enums.ProductStatus;
 import com.i3.delivery.domain.product.repository.ProductRepository;
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.store.service.StoreService;
@@ -32,6 +33,7 @@ public class ProductService {
                 .price(productRegistrationRequestDto.getPrice())
                 .stock(productRegistrationRequestDto.getStock())
                 .store(store)
+                .status(ProductStatus.EXIST)
                 .user(productUser)
                 .build();
 

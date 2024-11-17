@@ -83,6 +83,11 @@ public class Store extends BaseEntity {
     @JsonIgnore
     private List<Review> reviewList = new ArrayList<>();
 
+    @PrePersist
+    public void createStoreField(){
+            this.createdBy = getUserNickName();
+    }
+
     @PreUpdate
     public void updateDeleteField(){
         if(status == StoreStatus.DELETED) {
@@ -100,18 +105,15 @@ public class Store extends BaseEntity {
         return null;
     }
 
-    public void update(StoreEditRequsetDto storeEditRequsetDto) {
+    public void update(StoreEditRequsetDto storeEditRequsetDto,Category category) {
         this.name = storeEditRequsetDto.getName();
         this.description = storeEditRequsetDto.getDescription();
+        this.category= category;
         this.address = storeEditRequsetDto.getAddress();
         this.phoneNumber = storeEditRequsetDto.getPhoneNumber();
         this.status = storeEditRequsetDto.getStatus();
         this.totalReviews = storeEditRequsetDto.getTotalReviews();
         this.ratingAvg = storeEditRequsetDto.getRatingAvg();
-    }
-
-    public void updateCategory(Category category) {
-        this.category = category;
     }
 
     public void delete() {
