@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -45,10 +47,7 @@ public class User extends BaseEntity {
     private Boolean is_deleted;
 
     @Column
-    private String updated_by;
-
-    @Column
-    private String deleted_at;
+    private LocalDateTime deleted_at;
 
     @Column
     private String deleted_by;
@@ -64,6 +63,7 @@ public class User extends BaseEntity {
         this.role = role != null ? role : UserRoleEnum.USER; // 기본값 설정
         this.is_deleted = false;
     }
+
 
     // 유저 정보 수정
     public void update(UserEditRequestDto requestDto, PasswordEncoder passwordEncoder) {
