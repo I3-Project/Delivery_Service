@@ -101,4 +101,19 @@ public class UserService {
 
         user.setRole(UserRoleEnum.valueOf(role));
     }
+
+    @Transactional
+    public void editUserInfoByMaster(String username, UserEditRequestDto requestDto) {
+        // 수정 대상 유저 조회
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+
+        // 마스터 권한 가진 유저 조회
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String master = userDetails.getUsername();
+
+        user.update(requestDto, passwordEncoder);
+        user.setUpdatedBy(master);
+
+    }
 }
