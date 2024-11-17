@@ -23,7 +23,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     /* 1. 리뷰 등록 */
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'MASTER', 'USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_MASTER', 'ROLE_USER')")
     @PostMapping("/reviews")
     public ReviewResponseDto createReview(@RequestBody ReviewRequestDto request,
                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -31,8 +31,8 @@ public class ReviewController {
     }
 
     /* 2. 리뷰 수정 */
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'MASTER', 'USER')")
-    @PatchMapping("/{review_id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_MASTER', 'ROLE_USER')")
+    @PatchMapping("/reviews/{reviewId}")
     public ReviewResponseDto updateReview(@RequestBody ReviewRequestDto request,
                                           @AuthenticationPrincipal UserDetailsImpl userDetails,
                                           @PathVariable Long reviewId) {
