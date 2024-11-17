@@ -2,15 +2,13 @@ package com.i3.delivery.domain.store.dto;
 
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.store.enums.StoreStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Data
 public class StoreRegistrationResponseDto {
 
     private String name;

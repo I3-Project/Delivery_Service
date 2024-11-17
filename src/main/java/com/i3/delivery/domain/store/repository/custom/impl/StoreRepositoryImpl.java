@@ -7,21 +7,27 @@ import com.i3.delivery.domain.store.repository.custom.StoreRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
 
 import static com.i3.delivery.domain.review.entity.QReview.review;
 import static com.i3.delivery.domain.store.entity.QStore.store;
 
-@RequiredArgsConstructor
-public class StoreRepositoryImpl implements StoreRepositoryCustom {
+
+public class StoreRepositoryImpl extends QuerydslRepositorySupport implements StoreRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    public StoreRepositoryImpl (JPAQueryFactory queryFactory) {
+        super(Store.class);
+        this.queryFactory = queryFactory;
+    }
+
     // TODO Paging (+ Sorting)
     @Override
-    public List<Store> findAll(String keyword){
+    public List<Store> findAll(String keyword, Pageable pageable){
         List<Store> stores = queryFactory
                 .selectFrom(store)
             // TODO .or 보다 여러개 파라미터 사용하는것 고민해보기 (메소드 추출로 eqCatetory 네이밍 where category = "category")
