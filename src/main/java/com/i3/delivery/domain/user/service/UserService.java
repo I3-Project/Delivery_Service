@@ -116,4 +116,22 @@ public class UserService {
         user.setUpdatedBy(master);
 
     }
+
+    @Transactional
+    public void deleteUser(String username) {
+        // 삭제 대상 유저 조회
+        System.out.println("username :   " + username);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+
+        user.setIs_deleted(true); // is_deleted 플래그 설정
+        user.setDeleted_by(getCurrentUsername()); // 삭제 수행자 설정
+        userRepository.save(user); // 변경사항 저장
+    }
+
+    private String getCurrentUsername() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUsername();
+    }
+
 }

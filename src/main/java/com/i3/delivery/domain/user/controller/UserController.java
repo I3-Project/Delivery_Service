@@ -91,5 +91,17 @@ public class UserController {
         return ResponseEntity.ok("권한 부여 성공");
     }
 
+    @DeleteMapping("/users")
+    public ResponseEntity<String> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.deleteUser(userDetails.getUsername());
+        return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_MASTER')")
+    @DeleteMapping("/users/{username}")
+    public ResponseEntity<String> deleteUser(@PathVariable("username") String username) {
+        userService.deleteUser(username);
+        return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+    }
 
 }
