@@ -19,11 +19,11 @@ import java.util.UUID;
 public class Payment extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "payment_id", updatable = false, nullable = false)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false, nullable = false)
+    private Long id;
 
-    @Column(nullable = false)
+    @Column
     private UUID paymentUId;
 
     @Column(nullable = false)
@@ -32,6 +32,9 @@ public class Payment extends BaseEntity {
 
     @Column
     private BigDecimal totalPrice;
+
+    @Column(name = "pg_id", nullable = false)
+    private String pgId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
