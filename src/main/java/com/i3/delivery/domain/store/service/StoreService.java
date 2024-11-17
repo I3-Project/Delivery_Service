@@ -1,5 +1,7 @@
 package com.i3.delivery.domain.store.service;
 
+import com.i3.delivery.domain.category.entity.Category;
+import com.i3.delivery.domain.category.service.CategoryService;
 import com.i3.delivery.domain.store.dto.*;
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.store.enums.StoreStatus;
@@ -22,22 +24,25 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final StoreRepositoryImpl storeRepositoryImpl;
     private final UserRepository userRepository;
+    private final CategoryService categoryService;
 
     public StoreRegistrationResponseDto createStore(User user, StoreRegistrationRequestDto storeRegistrationRequestDto) {
 
         User storeUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
 
+        Category category = categoryService.findCategory(storeRegistrationRequestDto.getCategoryId());
+
         Store store = Store.builder()
                 .user(storeUser)
                 .name(storeRegistrationRequestDto.getName())
                 .description(storeRegistrationRequestDto.getDescription())
-                .category(storeRegistrationRequestDto.getCategory())
+                .category(category)
                 .phoneNumber(storeRegistrationRequestDto.getPhoneNumber())
                 .address(storeRegistrationRequestDto.getAddress())
                 .status(StoreStatus.CLOSE)
                 .totalReviews(0)
-                .ratingAvg(0)
+                .ratingAvg(1)
                 .build();
 
         storeRepository.save(store);
@@ -68,8 +73,15 @@ public class StoreService {
         Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         store.update(storeEditRequsetDto);
+        changeCategory(store, storeEditRequsetDto);
 
         return StoreEditResponseDto.from(store);
+    }
+
+    private void changeCategory(Store store, StoreEditRequsetDto storeEditRequsetDto) {
+
+        Category category = categoryService.findCategory(storeEditRequsetDto.getCategoryId());
+        store.updateCategory(category);
     }
 
     @Transactional
@@ -84,7 +96,7 @@ public class StoreService {
     }
 
     // TODO 여기서 transanctional 이 필요할까요?? 만약 쓴다면 readOnly = true 로 설정해주세요.
-    @Transactional
+    @Transactional(readOnly = true)
     public List<StoreReviewResponseDto> getStoreAvgAndReviews(String name) {
 
         return storeRepositoryImpl.findStoreAvgAndReviews(name);
