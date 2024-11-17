@@ -4,13 +4,15 @@ import com.i3.delivery.domain.product.dto.*;
 import com.i3.delivery.domain.product.service.ProductService;
 import com.i3.delivery.domain.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -34,9 +36,11 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductInfoResponseDto> getProductAll() {
+    public Page<ProductInfoResponseDto> getProductAll(@PageableDefault(page = 0, size = 10, sort = "createdAt",
+                    direction = Sort.Direction.DESC) Pageable pageable,
+                                                      @RequestParam Integer size) {
 
-        return productService.getProductAll();
+        return productService.getProductAll(pageable,size);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_MASTER')")
