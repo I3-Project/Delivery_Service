@@ -109,4 +109,16 @@ public class PaymentService {
 
         return paymentList.map(PaymentResponseDto::new);
     }
+
+    @Transactional
+    public void deletePayment(Long paymentId, Long userId) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new IllegalArgumentException("결제 정보가 없습니다."));
+
+        if (!payment.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("회원님의 결제 내역이 아닙니다.");
+        }
+
+        payment.setPaymentStatus(PaymentStatusEnum.DELETED);
+    }
 }

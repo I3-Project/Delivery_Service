@@ -37,7 +37,7 @@ public class PaymentController {
 
     /* 2. 결제 취소 */
     @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER')")
-    @DeleteMapping("payments/{paymentId}")
+    @PostMapping("/payments/{paymentId}")
     public ResponseEntity<Void> cancelPayment(@PathVariable Long paymentId,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
@@ -84,4 +84,16 @@ public class PaymentController {
 
         return ResponseEntity.ok(responseDto);
     }
+
+    /* 6. 결제 내역 삭제 */
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER', 'ROLE_MANAGER')")
+    @DeleteMapping("/payments/{paymentId}")
+    public ResponseEntity<Void> deletePayment(@PathVariable Long paymentId,
+                                              @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        paymentService.deletePayment(paymentId, userDetails.getUser().getId());
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
