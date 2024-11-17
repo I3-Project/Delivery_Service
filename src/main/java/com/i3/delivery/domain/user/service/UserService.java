@@ -2,15 +2,20 @@ package com.i3.delivery.domain.user.service;
 
 import com.i3.delivery.domain.user.dto.LoginRequestDto;
 import com.i3.delivery.domain.user.dto.SignupRequestDto;
+import com.i3.delivery.domain.user.dto.UserEditRequestDto;
 import com.i3.delivery.domain.user.dto.UserResponseDto;
 import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.entity.UserRoleEnum;
 import com.i3.delivery.domain.user.jwt.JwtUtil;
 import com.i3.delivery.domain.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,4 +73,17 @@ public class UserService {
                 .address(user.getAddress())
                 .build();
     }
+
+    @Transactional
+    public void editUserInfo(UserEditRequestDto requestDto) {
+        // 로그인한 유저정보조회
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        user.update(requestDto, passwordEncoder);
+
+    }
+
 }

@@ -1,11 +1,14 @@
 package com.i3.delivery.domain.user.entity;
 
+import com.i3.delivery.domain.user.dto.UserEditRequestDto;
 import com.i3.delivery.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -60,6 +63,15 @@ public class User extends BaseEntity {
         this.address = address;
         this.role = role != null ? role : UserRoleEnum.USER; // 기본값 설정
         this.is_deleted = false;
+    }
+
+    // 유저 정보 수정
+    public void update(UserEditRequestDto requestDto, PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(requestDto.getPassword());
+        this.nickname = requestDto.getNickname();
+        this.email = requestDto.getEmail();
+        this.phone = requestDto.getPhone();
+        this.address = requestDto.getAddress();
     }
 
 }

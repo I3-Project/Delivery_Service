@@ -2,6 +2,7 @@ package com.i3.delivery.domain.user.controller;
 
 import com.i3.delivery.domain.user.dto.LoginRequestDto;
 import com.i3.delivery.domain.user.dto.SignupRequestDto;
+import com.i3.delivery.domain.user.dto.UserEditRequestDto;
 import com.i3.delivery.domain.user.dto.UserResponseDto;
 import com.i3.delivery.domain.user.entity.UserRoleEnum;
 import com.i3.delivery.domain.user.security.UserDetailsImpl;
@@ -16,10 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,11 +29,11 @@ public class UserController {
 
     private final UserService userService;
 
+    // 회원가입
     @PostMapping("/users")
     public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {
         // 유효성 검사 실패 시
         if (bindingResult.hasErrors()) {
-            // 에러 메시지 추출
             String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
             return ResponseEntity.badRequest().body(errorMessage);
         }
@@ -44,7 +42,7 @@ public class UserController {
         return ResponseEntity.ok("회원가입 성공");
     }
 
-
+    // 회원정보목록 조회
     @GetMapping("/users")
     @PreAuthorize("hasAnyRole('MANAGER', 'MASTER')")
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
@@ -52,11 +50,24 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    // 회원정보 조회
     @GetMapping("/users/me")
     public ResponseEntity<UserResponseDto> getMyInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String username = userDetails.getUser().getUsername();
         UserResponseDto user = userService.getUserByUsername(username);
         return ResponseEntity.ok(user);
+    }
+
+    @PatchMapping("/users")
+    public ResponseEntity<String> editUserInfo(@Valid @RequestBody UserEditRequestDto requestDto, BindingResult bindingResult) {
+        // 유효성 검사 실패 시
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+        // 유효성 검사 통과 시
+        userService.editUserInfo(requestDto);
+        return ResponseEntity.ok("회원정보 수정 성공");
     }
 
 
