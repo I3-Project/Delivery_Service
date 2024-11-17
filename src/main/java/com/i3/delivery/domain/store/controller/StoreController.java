@@ -55,9 +55,12 @@ public class StoreController {
     }
 
     @GetMapping("/store/{name}")
-    public List<StoreReviewResponseDto> getStoreAvgAndReviews(@PathVariable(name = "name") String name) {
+    public Page<StoreReviewResponseDto> getStoreAvgAndReviews(@PathVariable(name = "name") String name,
+                                                              @PageableDefault(page = 0, size = 10, sort = "createdAt",
+                                                                      direction = Sort.Direction.DESC) Pageable pageable,
+                                                              @RequestParam Integer size) {
 
-        return storeService.getStoreAvgAndReviews(name);
+        return storeService.getStoreAvgAndReviews(name,pageable,size);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_MASTER')")
