@@ -13,6 +13,7 @@ public class ReviewResponseDto {
 
     private Long userId;
     private Long storeId;
+    private Long orderId;
     private String content;
     private Integer rating;
     private ReviewStatusEnum reviewStatus;
@@ -21,6 +22,7 @@ public class ReviewResponseDto {
         return new ReviewResponseDto(
                 review.getUser().getId(),
                 review.getStore().getId(),
+                review.getOrder().getId(),
                 review.getContent(),
                 review.getRating(),
                 review.getReviewStatus()
