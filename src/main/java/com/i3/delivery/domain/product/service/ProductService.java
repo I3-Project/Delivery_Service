@@ -1,5 +1,6 @@
 package com.i3.delivery.domain.product.service;
 
+import com.i3.delivery.domain.product.Ai.GeminiRequest;
 import com.i3.delivery.domain.product.dto.*;
 import com.i3.delivery.domain.product.entity.Product;
 import com.i3.delivery.domain.product.enums.ProductStatus;
@@ -32,9 +33,14 @@ public class ProductService {
 
         Store store = storeService.findStore(productRegistrationRequestDto.getStoreId());
 
+        GeminiRequest geminiRequest = new GeminiRequest();
+        String productName = geminiRequest.answer("음식점에서 파는 음식 명을 한글 10자 이내로 한개만 만들어 주세요.\n");
+        String productDescription = geminiRequest.answer(productName+"을 한글 20자 내로 설명해 주세요.\n");
+
+
         Product product = Product.builder()
-                .name(productRegistrationRequestDto.getName())
-                .description(productRegistrationRequestDto.getDescription())
+                .name(productName)
+                .description(productDescription)
                 .price(productRegistrationRequestDto.getPrice())
                 .stock(productRegistrationRequestDto.getStock())
                 .store(store)
