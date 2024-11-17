@@ -1,8 +1,6 @@
 package com.i3.delivery.domain.product.controller;
 
-import com.i3.delivery.domain.product.dto.ProductInfoResponseDto;
-import com.i3.delivery.domain.product.dto.ProductRegistrationRequestDto;
-import com.i3.delivery.domain.product.dto.ProductRegistrationResponseDto;
+import com.i3.delivery.domain.product.dto.*;
 import com.i3.delivery.domain.product.service.ProductService;
 import com.i3.delivery.domain.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @PreAuthorize("hasAnyAuthority('OWNER', 'MANAGER', 'MASTER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_OWNER', 'ROLE_MANAGER', 'ROLE_MASTER')")
     @PostMapping
     public ProductRegistrationResponseDto createStore(@Validated @RequestBody ProductRegistrationRequestDto productRegistrationRequestDto,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -30,6 +28,13 @@ public class ProductController {
     public ProductInfoResponseDto getProduct(@PathVariable(name = "id") Long id) {
 
         return productService.getProduct(id);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_MASTER')")
+    @PatchMapping("/{id}")
+    public ProductEditResponseDto updateStore(@PathVariable(name = "id") Long id, @RequestBody ProductEditRequestDto productEditRequsetDto) {
+
+        return productService.updateProduct(id, productEditRequsetDto);
     }
 
 }

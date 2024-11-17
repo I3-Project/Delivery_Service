@@ -1,8 +1,6 @@
 package com.i3.delivery.domain.product.service;
 
-import com.i3.delivery.domain.product.dto.ProductInfoResponseDto;
-import com.i3.delivery.domain.product.dto.ProductRegistrationRequestDto;
-import com.i3.delivery.domain.product.dto.ProductRegistrationResponseDto;
+import com.i3.delivery.domain.product.dto.*;
 import com.i3.delivery.domain.product.entity.Product;
 import com.i3.delivery.domain.product.enums.ProductStatus;
 import com.i3.delivery.domain.product.repository.ProductRepository;
@@ -12,6 +10,7 @@ import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +47,15 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(IllegalAccessError::new);
 
         return ProductInfoResponseDto.fromEntity(product);
+    }
+
+    @Transactional
+    public ProductEditResponseDto updateProduct(Long id, ProductEditRequestDto productEditRequestDto) {
+
+        Product product = productRepository.findById(id).orElseThrow(IllegalAccessError::new);
+
+        product.update(productEditRequestDto);
+
+        return ProductEditResponseDto.fromEntity(product);
     }
 }
