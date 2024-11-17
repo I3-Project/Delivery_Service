@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum PaymentStatusEnum {
     PENDING("PAYMENT_PENDING"),
     COMPLETED("PAYMENT_COMPLETED"),
-    CANCELED("PAYMENT_CANCELED");
+    CANCELED("PAYMENT_CANCELED"),
+    DELETED("PAYMENT_DELETED");
 
     private final String status;
 }

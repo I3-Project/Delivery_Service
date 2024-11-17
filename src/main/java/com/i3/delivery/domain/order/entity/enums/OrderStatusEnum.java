@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum OrderStatusEnum {
     PENDING("ORDER_STATUS_PENDING"),
-    DELIVERY("ORDER_STATUS_DELIVERY"),
     COMPLETED("ORDER_STATUS_COMPLETED"),
     CANCELED("ORDER_STATUS_CANCELED"),
     DELETED("ORDER_STATUS_DELETED");
