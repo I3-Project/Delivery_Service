@@ -60,6 +60,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    // 회원정보 수정
     @PatchMapping("/users")
     public ResponseEntity<String> editUserInfo(@Valid @RequestBody UserEditRequestDto requestDto, BindingResult bindingResult) {
 
@@ -74,6 +75,15 @@ public class UserController {
         return ResponseEntity.ok("회원정보 수정 성공");
     }
 
+    @PatchMapping("/users/{username}")
+    @PreAuthorize("hasAuthority('ROLE_MASTER')")
+    public ResponseEntity<String> editUserInfoByMaster(
+            @PathVariable String username,
+            @RequestBody UserEditRequestDto requestDto) {
+        userService.editUserInfoByMaster(username, requestDto);
+        return ResponseEntity.ok("회원정보 수정 성공");
+    }
+
     @PreAuthorize("hasAnyAuthority('ROLE_MASTER')")
     @PatchMapping("/users/role")
     public ResponseEntity<String> editUserRole(@RequestBody UserRoleEditRequestDto requestDto) {
@@ -81,17 +91,17 @@ public class UserController {
         return ResponseEntity.ok("권한 부여 성공");
     }
 
+    @DeleteMapping("/users")
+    public ResponseEntity<String> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.deleteUser(userDetails.getUsername());
+        return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+    }
 
-
-//    @PostMapping("/users/login")
-//    public ResponseEntity<String> login(LoginRequestDto requestDto, HttpServletResponse res) {
-//        try {
-//            userService.login(requestDto, res);
-//            return ResponseEntity.ok("로그인 성공");
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().body("로그인 실패: " + e.getMessage());
-//        }
-//    }
-
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_MASTER')")
+    @DeleteMapping("/users/{username}")
+    public ResponseEntity<String> deleteUser(@PathVariable("username") String username) {
+        userService.deleteUser(username);
+        return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+    }
 
 }
