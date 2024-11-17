@@ -2,6 +2,7 @@ package com.i3.delivery.domain.payment.controller;
 
 import com.i3.delivery.domain.payment.dto.PaymentRequestDto;
 import com.i3.delivery.domain.payment.dto.PaymentResponseDto;
+import com.i3.delivery.domain.payment.dto.PaymentStatusRequestDto;
 import com.i3.delivery.domain.payment.service.PaymentService;
 import com.i3.delivery.domain.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,16 @@ public class PaymentController {
                                               @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         paymentService.cancelPayment(paymentId, userDetails.getUser().getId());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /* 3. 결제 상태 변경 */
+    @PutMapping("/payments/{paymentId}")
+    public ResponseEntity<Void> modifyPaymentStatus(@RequestBody PaymentStatusRequestDto request,
+                                                   @PathVariable Long paymentId
+    ) {
+        paymentService.modifyStatusPayment(request, paymentId);
 
         return ResponseEntity.noContent().build();
     }
