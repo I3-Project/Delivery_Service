@@ -4,6 +4,7 @@ import com.i3.delivery.domain.product.dto.*;
 import com.i3.delivery.domain.product.service.ProductService;
 import com.i3.delivery.domain.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -37,4 +38,17 @@ public class ProductController {
         return productService.updateProduct(id, productEditRequsetDto);
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_MASTER')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable(name = "id") Long id) {
+
+        return productService.deleteProduct(id);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER')")
+    @DeleteMapping("/all/{id}")
+    public ResponseEntity<String> deleteProductAll(@PathVariable(name = "id") Long id) {
+
+        return productService.deleteProductAll(id);
+    }
 }

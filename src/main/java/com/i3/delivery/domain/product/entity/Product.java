@@ -93,4 +93,12 @@ public class Product extends BaseEntity {
         this.stock = productEditRequestDto.getStock();
         this.status = productEditRequestDto.getStatus();
     }
+
+    public void delete() {
+        this.status = ProductStatus.DELETED;
+    }
+
+    public void deleteAll() {
+
+    }
 }
