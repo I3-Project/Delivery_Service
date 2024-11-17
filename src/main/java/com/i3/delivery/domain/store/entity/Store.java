@@ -1,6 +1,5 @@
 package com.i3.delivery.domain.store.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.i3.delivery.domain.category.entity.Category;
 import com.i3.delivery.domain.review.entity.Review;
 import com.i3.delivery.domain.store.dto.StoreEditRequsetDto;
@@ -84,7 +83,7 @@ public class Store extends BaseEntity {
 
     @PrePersist
     public void createStoreField(){
-            this.createdBy = getUserNickName();
+            this.setCreatedBy(getUserNickName());
     }
 
     @PreUpdate
