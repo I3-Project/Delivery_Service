@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
+@Setter
 @Entity
 @Table(name="p_review")
 @NoArgsConstructor
@@ -91,11 +92,6 @@ public class Review extends BaseEntity {
 
     /* 리뷰 수정 */
     public void updateReview(String content, Integer rating) {
-        /*Review.builder()
-                .content(content)
-                .rating(rating)
-                .reviewStatus(ReviewStatusEnum.FIXED)
-                .build();*/
         this.content = content;
         this.rating = rating;
         this.reviewStatus = ReviewStatusEnum.FIXED;
