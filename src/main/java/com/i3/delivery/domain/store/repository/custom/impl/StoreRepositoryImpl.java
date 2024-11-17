@@ -72,7 +72,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                         Projections.constructor(
                                 StoreReviewResponseDto.class,
                                 store.ratingAvg,
-                                review.reviewId,
+                                review.id,
                                 review.store.id,
                                 review.rating,
                                 review.content,

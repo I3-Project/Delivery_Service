@@ -72,16 +72,15 @@ public class StoreService {
 
         Store store = storeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
-        store.update(storeEditRequsetDto);
-        changeCategory(store, storeEditRequsetDto);
+        Category category = findCategory(storeEditRequsetDto);
+        store.update(storeEditRequsetDto,category);
 
         return StoreEditResponseDto.from(store);
     }
 
-    private void changeCategory(Store store, StoreEditRequsetDto storeEditRequsetDto) {
+    private Category findCategory(StoreEditRequsetDto storeEditRequsetDto) {
 
-        Category category = categoryService.findCategory(storeEditRequsetDto.getCategoryId());
-        store.updateCategory(category);
+        return categoryService.findCategory(storeEditRequsetDto.getCategoryId());
     }
 
     @Transactional
@@ -100,5 +99,10 @@ public class StoreService {
     public List<StoreReviewResponseDto> getStoreAvgAndReviews(String name) {
 
         return storeRepositoryImpl.findStoreAvgAndReviews(name);
+    }
+
+    public Store findStore(Long storeId) {
+
+        return storeRepository.findById(storeId).orElseThrow(IllegalArgumentException::new);
     }
 }

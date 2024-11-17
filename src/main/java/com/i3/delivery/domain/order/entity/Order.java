@@ -70,8 +70,8 @@ public class Order extends BaseEntity {
     @Column(name = "deleted_by")
     private String deletedBy;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderProduct> orderProductList = new ArrayList<>();
+    /*@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderProduct> orderProductList = new ArrayList<>();*/
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
