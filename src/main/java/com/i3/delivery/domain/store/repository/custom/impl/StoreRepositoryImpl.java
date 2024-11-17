@@ -7,17 +7,22 @@ import com.i3.delivery.domain.store.repository.custom.StoreRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
 
 import static com.i3.delivery.domain.review.entity.QReview.review;
 import static com.i3.delivery.domain.store.entity.QStore.store;
 
-@RequiredArgsConstructor
-public class StoreRepositoryImpl implements StoreRepositoryCustom {
+
+public class StoreRepositoryImpl extends QuerydslRepositorySupport implements StoreRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
+    public StoreRepositoryImpl (JPAQueryFactory queryFactory) {
+        super(Store.class);
+        this.queryFactory = queryFactory;
+    }
 
     // TODO Paging (+ Sorting)
     @Override

@@ -14,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -49,6 +52,12 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(IllegalAccessError::new);
 
         return ProductInfoResponseDto.fromEntity(product);
+    }
+
+    public List<ProductInfoResponseDto> getProductAll() {
+
+            return productRepository.findAll()
+                    .stream().map(ProductInfoResponseDto::fromEntity).collect(Collectors.toList());
     }
 
     @Transactional

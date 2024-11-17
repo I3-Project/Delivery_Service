@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +53,8 @@ public class StoreService {
 
     public List<StoreInfoResponseDto> getStores() {
 
-        return storeRepository.findAll().stream().map(store -> new StoreInfoResponseDto()).toList();
+        return storeRepository.findAll()
+                .stream().map(StoreInfoResponseDto::fromEntity).collect(Collectors.toList());
     }
 
     public StoreInfoResponseDto getStore(Long id) {
@@ -62,9 +64,11 @@ public class StoreService {
         return StoreInfoResponseDto.fromEntity(store);
     }
 
+    @Transactional
     public List<StoreInfoResponseDto> getStoresByKeyword(String keyword) {
 
-        return storeRepositoryImpl.findAll(keyword).stream().map(store -> new StoreInfoResponseDto()).toList();
+        return storeRepositoryImpl.findAll(keyword)
+                .stream().map(StoreInfoResponseDto::fromEntity).collect(Collectors.toList());
     }
 
     @Transactional

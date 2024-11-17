@@ -10,6 +10,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
@@ -29,6 +31,12 @@ public class ProductController {
     public ProductInfoResponseDto getProduct(@PathVariable(name = "id") Long id) {
 
         return productService.getProduct(id);
+    }
+
+    @GetMapping
+    public List<ProductInfoResponseDto> getProductAll() {
+
+        return productService.getProductAll();
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_MASTER')")
