@@ -2,10 +2,12 @@ package com.i3.delivery.domain.store.dto;
 
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.store.enums.StoreStatus;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Data
 @NoArgsConstructor
 public class StoreEditResponseDto {
 

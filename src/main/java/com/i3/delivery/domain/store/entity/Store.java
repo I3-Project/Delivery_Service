@@ -40,9 +40,6 @@ public class Store extends BaseEntity {
     @Size(min = 2, max = 20, message = "이름은 최소 2자입니다.")
     @NotBlank(message = "이름을 입력해주세요.")
     private String name;
-//
-//    @Column
-//    private Long ownerId;
 
     @Size(max = 500, message = "설명은 최대 500자입니다.")
     @NotBlank(message = "설명을 입력해주세요.")

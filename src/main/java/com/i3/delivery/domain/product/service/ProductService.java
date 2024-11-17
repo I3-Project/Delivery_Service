@@ -9,6 +9,9 @@ import com.i3.delivery.domain.store.service.StoreService;
 import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,6 +52,14 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(IllegalAccessError::new);
 
         return ProductInfoResponseDto.fromEntity(product);
+    }
+
+    public Page<ProductInfoResponseDto> getProductAll(Pageable pageable, int size) {
+
+        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        return productRepository.findAll(pageable).
+                map(ProductInfoResponseDto::fromEntity);
     }
 
     @Transactional

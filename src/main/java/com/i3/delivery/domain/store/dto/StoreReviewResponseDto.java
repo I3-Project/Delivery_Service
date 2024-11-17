@@ -1,6 +1,7 @@
 package com.i3.delivery.domain.store.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class StoreReviewResponseDto {
 
     private int ratingAvg;
