@@ -93,6 +93,8 @@ public class Store extends BaseEntity {
             this.deletedAt = LocalDateTime.now();
             this.deletedBy = getUserNickName();
         }
+        this.setUpdatedAt(LocalDateTime.now());
+        this.setUpdatedBy(getUserNickName());
     }
 
     private static String getUserNickName() {
