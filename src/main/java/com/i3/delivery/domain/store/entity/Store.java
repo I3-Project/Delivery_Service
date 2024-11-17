@@ -80,7 +80,6 @@ public class Store extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "store")
-    @JsonIgnore
     private List<Review> reviewList = new ArrayList<>();
 
     @PreUpdate
