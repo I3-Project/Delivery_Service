@@ -23,7 +23,7 @@ public class ProductController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER', 'ROLE_MANAGER', 'ROLE_MASTER')")
     @PostMapping
-    public ProductRegistrationResponseDto createStore(@Validated @RequestBody ProductRegistrationRequestDto productRegistrationRequestDto,
+    public ProductRegistrationResponseDto createProduct(@Validated @RequestBody ProductRegistrationRequestDto productRegistrationRequestDto,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         return productService.createProduct(userDetails.getUser(), productRegistrationRequestDto);
@@ -45,7 +45,7 @@ public class ProductController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_MASTER')")
     @PatchMapping("/{id}")
-    public ProductEditResponseDto updateStore(@PathVariable(name = "id") Long id, @RequestBody ProductEditRequestDto productEditRequsetDto) {
+    public ProductEditResponseDto updateProduct(@PathVariable(name = "id") Long id, @RequestBody ProductEditRequestDto productEditRequsetDto) {
 
         return productService.updateProduct(id, productEditRequsetDto);
     }
