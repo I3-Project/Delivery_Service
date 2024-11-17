@@ -9,6 +9,8 @@ import com.i3.delivery.domain.store.service.StoreService;
 import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,5 +59,25 @@ public class ProductService {
         product.update(productEditRequestDto);
 
         return ProductEditResponseDto.fromEntity(product);
+    }
+
+    @Transactional
+    public ResponseEntity<String> deleteProduct(Long id) {
+
+        Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+
+        product.delete();
+
+        return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
+    }
+
+    @Transactional
+    public ResponseEntity<String> deleteProductAll(Long id) {
+
+        Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+
+        productRepository.delete(product);
+
+        return ResponseEntity.status(HttpStatus.OK).body("전부 삭제 완료");
     }
 }
