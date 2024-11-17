@@ -57,7 +57,7 @@ public class PaymentController {
         return ResponseEntity.noContent().build();
     }
 
-    /* 결제 목록 조회 (USER) */
+    /* 4. 결제 목록 조회 (USER) */
     @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER')")
     @GetMapping("/payments/user")
     public ResponseEntity<Page<PaymentResponseDto>> userPaymentList(
@@ -71,7 +71,7 @@ public class PaymentController {
         return ResponseEntity.ok(responseDto);
     }
 
-    /* 결제 목록 조회 (storeId) */
+    /* 5. 결제 목록 조회 (storeId) */
     @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_OWNER')")
     @GetMapping("/payments/{storeId}")
     public ResponseEntity<Page<PaymentResponseDto>> ownerPaymentList(
