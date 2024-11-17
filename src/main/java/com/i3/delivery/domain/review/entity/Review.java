@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
+@Setter
 @Entity
 @Table(name="p_review")
 @NoArgsConstructor
@@ -28,7 +29,7 @@ public class Review extends BaseEntity {
     @Column(updatable = false, nullable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private UUID reviewUId;
 
     @Column(nullable = false)
@@ -36,7 +37,7 @@ public class Review extends BaseEntity {
     private String content;
 
     @Column(nullable = false)
-    @Size(min=1, max=5, message = "평점은 1-5점만 입력 가능합니다.")
+    //@Size(min=1, max=5, message = "평점은 1-5점만 입력 가능합니다.")
     private Integer rating;
 
     @Column(nullable = false)
@@ -90,11 +91,9 @@ public class Review extends BaseEntity {
     }
 
     /* 리뷰 수정 */
-    public static void updateReview(String content, Integer rating) {
-        Review.builder()
-                .content(content)
-                .rating(rating)
-                .reviewStatus(ReviewStatusEnum.FIXED)
-                .build();
+    public void updateReview(String content, Integer rating) {
+        this.content = content;
+        this.rating = rating;
+        this.reviewStatus = ReviewStatusEnum.FIXED;
     }
 }
