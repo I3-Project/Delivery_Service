@@ -1,5 +1,6 @@
 package com.i3.delivery.domain.product.service;
 
+import com.i3.delivery.domain.product.dto.ProductInfoResponseDto;
 import com.i3.delivery.domain.product.dto.ProductRegistrationRequestDto;
 import com.i3.delivery.domain.product.dto.ProductRegistrationResponseDto;
 import com.i3.delivery.domain.product.entity.Product;
@@ -40,5 +41,12 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
 
         return ProductRegistrationResponseDto.fromEntity(savedProduct);
+    }
+
+    public ProductInfoResponseDto getProduct(Long id) {
+
+        Product product = productRepository.findById(id).orElseThrow(IllegalAccessError::new);
+
+        return ProductInfoResponseDto.fromEntity(product);
     }
 }

@@ -1,5 +1,6 @@
 package com.i3.delivery.domain.product.controller;
 
+import com.i3.delivery.domain.product.dto.ProductInfoResponseDto;
 import com.i3.delivery.domain.product.dto.ProductRegistrationRequestDto;
 import com.i3.delivery.domain.product.dto.ProductRegistrationResponseDto;
 import com.i3.delivery.domain.product.service.ProductService;
@@ -8,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/products")
@@ -28,5 +26,10 @@ public class ProductController {
         return productService.createProduct(userDetails.getUser(), productRegistrationRequestDto);
     }
 
+    @GetMapping("/{id}")
+    public ProductInfoResponseDto getProduct(@PathVariable(name = "id") Long id) {
+
+        return productService.getProduct(id);
+    }
 
 }
