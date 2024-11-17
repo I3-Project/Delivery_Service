@@ -54,23 +54,28 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "delete_at")
+    @Column(nullable = false)
+    private Long product_id;
+
+    @Size(max = 50, message = "주소는 최대 50자입니다.")
+    private String address;
+
+    @Column
+    private String productName;
+
+    @Column(name = "deleted_at")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime deletedAt;
 
-    @Column(name = "delete_by")
+    @Column(name = "deleted_by")
     private String deletedBy;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderProduct> orderProductList = new ArrayList<>();
+    /*@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderProduct> orderProductList = new ArrayList<>();*/
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    /*@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", nullable = false)
-    private Address address;*/
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)

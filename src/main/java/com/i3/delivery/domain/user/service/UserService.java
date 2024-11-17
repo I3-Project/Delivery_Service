@@ -2,16 +2,24 @@ package com.i3.delivery.domain.user.service;
 
 import com.i3.delivery.domain.user.dto.LoginRequestDto;
 import com.i3.delivery.domain.user.dto.SignupRequestDto;
+import com.i3.delivery.domain.user.dto.UserEditRequestDto;
+import com.i3.delivery.domain.user.dto.UserResponseDto;
 import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.entity.UserRoleEnum;
 import com.i3.delivery.domain.user.jwt.JwtUtil;
 import com.i3.delivery.domain.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,41 +29,61 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public void signup(SignupRequestDto requestDto) {
+        // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-        // TODO null 을 넣는다기보다, 값으면 null로 유지하게 두기
-        User user = new User(
-                requestDto.getUsername(),
-                encodedPassword,
-                requestDto.getNickname(),
-                requestDto.getEmail(),
-                requestDto.getAddress(),
-                UserRoleEnum.USER,
-                null,
-                null,
-                null
-        );
+        User user = User.builder()
+                .username(requestDto.getUsername())
+                .password(encodedPassword)
+                .nickname(requestDto.getNickname())
+                .email(requestDto.getEmail())
+                .address(requestDto.getAddress())
+                .phone(requestDto.getPhone())
+                .role(UserRoleEnum.USER)
+                .build();
+
         userRepository.save(user);
+
     }
 
 
-//    public void login(LoginRequestDto requestDto, HttpServletResponse res) {
-//        String username = requestDto.getUsername();
-//        String password = requestDto.getPassword();
-//
-//        // 사용자 확인
-//        User user = userRepository.findByUsername(username).orElseThrow(
-//                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
-//        );
-//
-//        // 비밀번호 확인
-//        if (!passwordEncoder.matches(password, user.getPassword())) {
-//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-//        }
-//
-//        // JWT 생성 및 쿠키에 저장 후 Response 객체에 추가
-//        String token = jwtUtil.createToken(user.getUsername(), user.getRole());
-//        jwtUtil.addJwtToCookie(token, res);
-//    }
+    public List<UserResponseDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> UserResponseDto.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .nickname(user.getNickname())
+                        .email(user.getEmail())
+                        .address(user.getAddress())
+                        .role(user.getRole())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public UserResponseDto getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .address(user.getAddress())
+                .build();
+    }
+
+    @Transactional
+    public void editUserInfo(UserEditRequestDto requestDto) {
+        // 로그인한 유저정보조회
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        user.update(requestDto, passwordEncoder);
+
+    }
 
 }

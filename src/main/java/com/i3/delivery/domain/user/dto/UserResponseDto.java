@@ -1,17 +1,19 @@
 package com.i3.delivery.domain.user.dto;
 
 import com.i3.delivery.domain.user.entity.UserRoleEnum;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class SignupResponseDto {
-
+@Setter
+@Builder
+public class UserResponseDto {
+    private Long id;
     private String username;
-    private String password;
     private String nickname;
     private String email;
     private String address;
-    private String phone;
     private UserRoleEnum role;
-
 }
+
