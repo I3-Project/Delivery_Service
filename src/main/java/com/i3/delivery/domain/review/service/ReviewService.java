@@ -60,4 +60,23 @@ public class ReviewService {
 
         return ReviewResponseDto.toResponseDto(review);
     }
+
+    @Transactional
+    public void deleteReview(Long reviewId, Long userId) {
+
+        Review review = reviewRepository.findById(reviewId)
+                .map(p -> {
+                    if (ReviewStatusEnum.DELETED.equals(p.getReviewStatus())) {
+                        throw new IllegalArgumentException("해당 리뷰는 삭제된 상태입니다.");
+                    }
+                    return p;
+                })
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰를 찾을 수 없습니다."));
+
+        if (!review.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("회원님이 등록한 리뷰가 아닙니다.");
+        }
+
+        review.setReviewStatus(ReviewStatusEnum.DELETED);
+    }
 }

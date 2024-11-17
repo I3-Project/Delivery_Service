@@ -4,16 +4,11 @@ import com.i3.delivery.domain.review.dto.ReviewRequestDto;
 import com.i3.delivery.domain.review.dto.ReviewResponseDto;
 import com.i3.delivery.domain.review.service.ReviewService;
 import com.i3.delivery.domain.user.security.UserDetailsImpl;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -38,5 +33,16 @@ public class ReviewController {
                                           @PathVariable Long reviewId) {
 
         return reviewService.updateReview(request, reviewId, userDetails.getUser().getId());
+    }
+
+    /* 3. 리뷰 삭제 */
+    @DeleteMapping("reviews/{reviewId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER')")
+    public ResponseEntity<Void> deleteProduct(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                 @PathVariable Long reviewId) {
+
+        reviewService.deleteReview(reviewId, userDetails.getUser().getId());
+        return ResponseEntity.noContent().build();
+
     }
 }
