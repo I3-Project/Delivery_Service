@@ -18,7 +18,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'MASTER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_MASTER')")
     @PostMapping
     public CategoryResponseDto createCategory(@Validated @RequestBody CategoryRequestDto categoryRequestDto) {
 

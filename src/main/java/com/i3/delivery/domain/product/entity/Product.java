@@ -1,5 +1,6 @@
 package com.i3.delivery.domain.product.entity;
 
+import com.i3.delivery.domain.product.dto.ProductEditRequestDto;
 import com.i3.delivery.domain.product.enums.ProductStatus;
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.user.entity.User;
@@ -59,6 +60,11 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @PrePersist
+    public void createStoreField(){
+        this.setCreatedBy(getUserNickName());
+    }
+
     @PreUpdate
     public void updateDeleteField(){
         if(status == ProductStatus.DELETED) {
@@ -66,6 +72,8 @@ public class Product extends BaseEntity {
             this.deletedAt = LocalDateTime.now();
             this.deletedBy = getUserNickName();
         }
+        this.setUpdatedAt(LocalDateTime.now());
+        this.setUpdatedBy(getUserNickName());
     }
 
     private static String getUserNickName() {
@@ -77,4 +85,20 @@ public class Product extends BaseEntity {
     }
 
 
+    public void update(ProductEditRequestDto productEditRequestDto) {
+
+        this.name = productEditRequestDto.getName();
+        this.description = productEditRequestDto.getDescription();
+        this.price = productEditRequestDto.getPrice();
+        this.stock = productEditRequestDto.getStock();
+        this.status = productEditRequestDto.getStatus();
+    }
+
+    public void delete() {
+        this.status = ProductStatus.DELETED;
+    }
+
+    public void deleteAll() {
+
+    }
 }
