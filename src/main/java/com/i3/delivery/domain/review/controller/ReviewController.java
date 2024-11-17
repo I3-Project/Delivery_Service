@@ -5,6 +5,10 @@ import com.i3.delivery.domain.review.dto.ReviewResponseDto;
 import com.i3.delivery.domain.review.service.ReviewService;
 import com.i3.delivery.domain.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -45,4 +49,28 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
 
     }
+
+    /* 4. 리뷰 조회 (OWNER) */
+    @GetMapping("reviews/{storeId}")
+    public Page<ReviewResponseDto> getStoreReviews(
+            @PageableDefault(page = 0, size = 10, sort = "createdAt",
+                    direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam Integer size,
+            @PathVariable("storeId") Long storeId
+    ) {
+        return reviewService.getStoreReviews(pageable, size, storeId);
+    }
+
+    /* 5. 리뷰 조회 (USER) */
+    @GetMapping("reviews/myReviews")
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER')")
+    public Page<ReviewResponseDto> getUserReviews(
+            @PageableDefault(page = 0, size = 10, sort = "createdAt",
+                    direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam Integer size,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        return reviewService.getUserReviews(pageable, size, userDetails.getUser().getId());
+    }
+
 }

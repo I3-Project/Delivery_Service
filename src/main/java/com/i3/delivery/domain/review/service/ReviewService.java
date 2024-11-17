@@ -12,6 +12,10 @@ import com.i3.delivery.domain.store.repository.StoreRepository;
 import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,5 +82,27 @@ public class ReviewService {
         }
 
         review.setReviewStatus(ReviewStatusEnum.DELETED);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ReviewResponseDto> getStoreReviews(Pageable pageable, Integer size, Long storeId) {
+
+        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new IllegalArgumentException("가게 정보가 없습니다."));
+
+        return reviewRepository.findAllByStore_Id(storeId, pageable).map(ReviewResponseDto::toResponseDto);
+    }
+
+    public Page<ReviewResponseDto> getUserReviews(Pageable pageable, Integer size, Long userId) {
+
+        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 정보가 없습니다."));
+
+        return reviewRepository.findAllByUser_Id(userId, pageable).map(ReviewResponseDto::toResponseDto);
+
     }
 }
