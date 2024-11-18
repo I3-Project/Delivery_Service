@@ -1,29 +1,91 @@
-- ## 팀원 역할 분담
-  - 신상우 : 유저 / 카트
-  - 민지수 : 주문 / 지불 / 리뷰
-  - 김한준 : 카테고리 / 상품 / 가게
+# DELIVER_SERVICE 🏍
 
 
-- ## 서비스 구성 및 실행방법
-  ![image](https://github.com/user-attachments/assets/d181b8ee-0c20-41d0-a57b-f0a364035f10)
+## 🗓️ 개발 기간
+* 2024.11.08 ~ 2024.11.18
 
 
-- ## 프로젝트 목적/상세
-  > 배달의민족 어플을 베이스로 한 배달 주문 프로젝트입니다.<br/>
-유저/카테고리/가게/상품/주문/장바구니/결제 도메인으로 구성되어있으며,<br/>
-기본적인 CURD Api와 사용자의 권한에 따른 접근 구별, 리뷰와 평점을 남기고 페이징, Querydsl을 활용한 데이터 조회기능, <br/>
-AI를 이용한 자동 상품 생성과 클라우드에 배포까지 완료한 프로젝트입니다.
-### [노션 링크](https://teamsparta.notion.site/17-2b5a28ab8f5e42e5a02f8d3f57ab7242)
-<br/>
+## 📚 목차
+[1. 프로젝트 개요](#1-프로젝트-개요)
 
-- ## ERD
-  ![delivery erd txt](https://github.com/user-attachments/assets/425e5164-12fe-4f4a-bab1-4ffb185545a6)
+[2. 역할 분담](#2-역할-분담)
+
+[3. 요구사항 명세서](#3-요구사항-명세서)
+
+[4. API 명세서](#4-api-명세서)
+
+[5. ERD](#5-erd)
+
+[6. 기술 스택](#6-기술-스택)
+
+[7. 인프라 설계도](#7-인프라-설계도)
+
+[8.Git Convention](#8-Git-Convention)
 
 
-- ## 기술 스택
-  - Server : AWS EC2
-  - DataBase : AWS RDS, H2, MySQL, PostGreSQL
+## ✅ 1. 프로젝트 개요
+* **주제:** 음식 주문 및 결제 플랫폼
+* **목표:** 운영 가게 및 음식 재고 관리와 주문, 결제 + 내역 관리를 제공하는 플랫폼 구현
 
-  
-- ## API docs
-  [링크](https://docs.google.com/spreadsheets/d/1gQWuJSk7CjLbx0QzEvXpc8jvOHdpER1mDXA7hXSqsc0/edit?gid=0#gid=0)
+
+## 👊🏻 2. 역할 분담
+| 이름                                         | 역할 분담                        |
+|--------------------------------------------|------------------------------|
+| 신상우      | User, Auth&Jwt, Cart        |
+| 민지수      | Order, Payment, Review, Aws, RDS        |
+| 김한준      | Category, Store, Product, Google Api  |
+
+
+## 📕 3. 요구사항 명세서
+* [📘 배딜핑 - 요구사항 명세서 및 테이블 설계서](https://docs.google.com/spreadsheets/d/1gQWuJSk7CjLbx0QzEvXpc8jvOHdpER1mDXA7hXSqsc0/edit?usp=sharing)
+
+
+## 📙 4. API 명세서
+- PostMan을 활용한 API 테스트 진행, 이를 문서화하여 API 명세서 작성
+* [API 명세서 - Notion](https://docs.google.com/spreadsheets/d/1gQWuJSk7CjLbx0QzEvXpc8jvOHdpER1mDXA7hXSqsc0/edit?gid=0#gid=0)
+
+
+## 📋 5. ERD
+![ERD](./IMG/erd.png)
+
+
+## 🛠️ 6. 기술 스택
+* Backend
+    * Spring Boot 3.3.5
+    * Spring Cloud Gateway
+    * Gradle
+    * JWT
+    * Oauth2
+    * QueryDSL
+    * JPA
+* API Test
+    * PostMan
+* Database
+    * Postgresql
+* Infra
+    * AWS EC2 t2.medium
+    * RDS
+* CI/CD
+    * GitAction
+* Version
+    * Git
+    * Github
+
+ 
+## 🛠️ 7. 인프라 설계도
+![인프라설계도](./IMG/sys-arch.png)
+
+
+## 💡 8.Git Convention
+
+|머리말|내용|
+|-----|-----|
+|Init|시작|
+|Fix|버그 수정|
+|Add|새로운 기능 추가|
+|Update|기존 기능 업데이트|
+|Remove|불필요한 코드 제거|
+|Refactor|코드 리팩토링|
+|Improve|성능 개선|
+|Document|문서화|
+|Test|테스트 추가 또는 수정|
