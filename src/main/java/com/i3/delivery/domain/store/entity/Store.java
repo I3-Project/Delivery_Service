@@ -118,6 +118,10 @@ public class Store extends BaseEntity {
         this.ratingAvg = storeEditRequsetDto.getRatingAvg();
     }
 
+    public void update(StoreStatus status) {
+        this.status = status;
+    }
+
     public void delete() {
         this.status = StoreStatus.DELETED;
     }
