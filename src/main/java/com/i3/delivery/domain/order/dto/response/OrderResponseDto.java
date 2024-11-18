@@ -19,24 +19,21 @@ public class OrderResponseDto {
 
     private Long orderId;
     private Long userId;
-    private Long addressId;
-    private Long productId;
     private Long storeId;
+    private String address;
     private OrderTypeEnum orderType;
     private OrderStatusEnum orderStatus;
-    private Long paymentId;
-    private String oRequest;
-    private Integer quantity;
     private BigDecimal totalPrice;
-    private List<OrderListResponseDto> orderList;
+    private String orderRequest;
 
     public OrderResponseDto(Order order) {
         this.orderId = order.getId();
         this.userId = order.getUser().getId();
         this.storeId = order.getStore().getId();
+        this.address = order.getAddress();
         this.orderType = order.getOrderType();
         this.orderStatus = order.getOrderStatus();
         this.totalPrice = order.getTotalPrice();
-        this.oRequest = order.getORequest();
+        this.orderRequest = order.getOrderRequest();
     }
 }
