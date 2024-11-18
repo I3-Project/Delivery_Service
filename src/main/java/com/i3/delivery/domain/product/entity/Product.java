@@ -44,6 +44,7 @@ public class Product extends BaseEntity {
     private int stock;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private ProductStatus status;
 
     @Column
