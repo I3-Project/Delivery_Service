@@ -6,22 +6,32 @@ import com.i3.delivery.domain.store.enums.StoreStatus;
 import com.i3.delivery.domain.store.repository.custom.StoreRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
 
 import static com.i3.delivery.domain.review.entity.QReview.review;
 import static com.i3.delivery.domain.store.entity.QStore.store;
 
-@RequiredArgsConstructor
-public class StoreRepositoryImpl implements StoreRepositoryCustom {
+
+public class StoreRepositoryImpl extends QuerydslRepositorySupport implements StoreRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    public StoreRepositoryImpl (JPAQueryFactory queryFactory) {
+        super(Store.class);
+        this.queryFactory = queryFactory;
+    }
+
     // TODO Paging (+ Sorting)
     @Override
-    public List<Store> findAll(String keyword){
+    public List<Store> findAll(String keyword, Pageable pageable){
         List<Store> stores = queryFactory
                 .selectFrom(store)
             // TODO .or 보다 여러개 파라미터 사용하는것 고민해보기 (메소드 추출로 eqCatetory 네이밍 where category = "category")
@@ -65,9 +75,11 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
     }
 
     @Override
-    public List<StoreReviewResponseDto> findStoreAvgAndReviews(String name) {
+    public Page<StoreReviewResponseDto> findStoreAvgAndReviews(String name,Pageable pageable, int size) {
 
-        List<StoreReviewResponseDto> reviews = queryFactory
+        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        JPAQuery<StoreReviewResponseDto> query = queryFactory
                 .select(
                         Projections.constructor(
                                 StoreReviewResponseDto.class,
@@ -76,17 +88,18 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                                 review.store.id,
                                 review.rating,
                                 review.content,
-//                                review.userName,
+                                review.user.nickname,
                                 review.createdAt
                         )
                 )
                 .from(store)
                 .join(review)
                 .on(store.id.eq(review.store.id))
-                .where(store.name.eq(name))
-                .fetch();
+                .where(store.name.eq(name));
 
-        long totalCount = reviews.size();
+        List<StoreReviewResponseDto> reviews = getQuerydsl().applyPagination(pageable,query).fetch();
+
+        int totalCount = reviews.size();
 
         double average = reviews.stream()
                 .map(StoreReviewResponseDto::getRating)
@@ -95,17 +108,10 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom {
                 .orElse(0.0);
 
         queryFactory.update(store)
-                .set(store.ratingAvg, (int)average)
+                .set(store.totalReviews, totalCount)
                 .where(store.name.eq(name))
                 .execute();
 
-        queryFactory.update(store)
-                .set(store.totalReviews, (int)totalCount)
-                .where(store.name.eq(name))
-                .execute();
-
-        return reviews;
+        return new PageImpl<>(reviews,pageable,(int)average);
     }
-
-
 }

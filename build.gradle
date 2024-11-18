@@ -24,6 +24,10 @@ repositories {
 }
 
 dependencies {
+
+    // AI
+    implementation group: 'org.json', name: 'json', version: '20240303'
+
     // Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 

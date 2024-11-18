@@ -4,6 +4,7 @@ import com.i3.delivery.domain.category.dto.CategoryRequestDto;
 import com.i3.delivery.domain.category.dto.CategoryResponseDto;
 import com.i3.delivery.domain.category.entity.Category;
 import com.i3.delivery.domain.category.repository.CategoryRepository;
+import com.i3.delivery.global.exception.category.CategoryNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,6 @@ public class CategoryService {
 
     public Category findCategory(Long categoryId) {
 
-        return categoryRepository.findById(categoryId).orElseThrow(IllegalArgumentException::new);
+        return categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
     }
 }

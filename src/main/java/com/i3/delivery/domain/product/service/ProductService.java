@@ -1,5 +1,6 @@
 package com.i3.delivery.domain.product.service;
 
+import com.i3.delivery.domain.product.Ai.GeminiRequest;
 import com.i3.delivery.domain.product.dto.*;
 import com.i3.delivery.domain.product.entity.Product;
 import com.i3.delivery.domain.product.enums.ProductStatus;
@@ -8,7 +9,11 @@ import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.store.service.StoreService;
 import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.repository.UserRepository;
+import com.i3.delivery.global.exception.product.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,9 +34,14 @@ public class ProductService {
 
         Store store = storeService.findStore(productRegistrationRequestDto.getStoreId());
 
+        GeminiRequest geminiRequest = new GeminiRequest();
+        String productName = geminiRequest.answer("음식점에서 파는 음식 명을 한글 10자 이내로 한개만 만들어 주세요.\n");
+        String productDescription = geminiRequest.answer(productName+"을 한글 20자 내로 설명해 주세요.\n");
+
+
         Product product = Product.builder()
-                .name(productRegistrationRequestDto.getName())
-                .description(productRegistrationRequestDto.getDescription())
+                .name(productName)
+                .description(productDescription)
                 .price(productRegistrationRequestDto.getPrice())
                 .stock(productRegistrationRequestDto.getStock())
                 .store(store)
@@ -46,15 +56,23 @@ public class ProductService {
 
     public ProductInfoResponseDto getProduct(Long id) {
 
-        Product product = productRepository.findById(id).orElseThrow(IllegalAccessError::new);
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         return ProductInfoResponseDto.fromEntity(product);
+    }
+
+    public Page<ProductInfoResponseDto> getProductAll(Pageable pageable, int size) {
+
+        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        return productRepository.findAll(pageable).
+                map(ProductInfoResponseDto::fromEntity);
     }
 
     @Transactional
     public ProductEditResponseDto updateProduct(Long id, ProductEditRequestDto productEditRequestDto) {
 
-        Product product = productRepository.findById(id).orElseThrow(IllegalAccessError::new);
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         product.update(productEditRequestDto);
 
@@ -64,7 +82,7 @@ public class ProductService {
     @Transactional
     public ResponseEntity<String> deleteProduct(Long id) {
 
-        Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         product.delete();
 
@@ -74,7 +92,7 @@ public class ProductService {
     @Transactional
     public ResponseEntity<String> deleteProductAll(Long id) {
 
-        Product product = productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         productRepository.delete(product);
 

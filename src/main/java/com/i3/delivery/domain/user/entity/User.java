@@ -1,10 +1,15 @@
 package com.i3.delivery.domain.user.entity;
 
+import com.i3.delivery.domain.review.entity.ReviewStatusEnum;
 import com.i3.delivery.domain.user.dto.UserEditRequestDto;
 import com.i3.delivery.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -42,16 +47,20 @@ public class User extends BaseEntity {
     private UserRoleEnum role;
 
     @Column
-    private Boolean is_deleted;
+    private Boolean is_deleted = false;
 
     @Column
-    private String updated_by;
-
-    @Column
-    private String deleted_at;
+    private LocalDateTime deleted_at;
 
     @Column
     private String deleted_by;
+
+    @PreUpdate
+    public void updateDeleteField() {
+        if (this.is_deleted) {
+            this.deleted_at = LocalDateTime.now();
+        }
+    }
 
     @Builder
     public User(String username, String password, String nickname, String email, String phone, String address, UserRoleEnum role) {
@@ -64,6 +73,7 @@ public class User extends BaseEntity {
         this.role = role != null ? role : UserRoleEnum.USER; // 기본값 설정
         this.is_deleted = false;
     }
+
 
     // 유저 정보 수정
     public void update(UserEditRequestDto requestDto, PasswordEncoder passwordEncoder) {
