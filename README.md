@@ -46,7 +46,7 @@
 
 
 ## 📋 5. ERD
-![ERD](./IMG/erd.png)
+![ERD](https://github.com/user-attachments/assets/425e5164-12fe-4f4a-bab1-4ffb185545a6)
 
 
 ## 🛠️ 6. 기술 스택
@@ -73,7 +73,7 @@
 
  
 ## 🛠️ 7. 인프라 설계도
-![인프라설계도](./IMG/sys-arch.png)
+![인프라설계도](https://github.com/user-attachments/assets/d181b8ee-0c20-41d0-a57b-f0a364035f10)
 
 
 ## 💡 8.Git Convention
