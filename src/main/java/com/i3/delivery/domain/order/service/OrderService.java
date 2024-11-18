@@ -1,13 +1,21 @@
 package com.i3.delivery.domain.order.service;
 
+import com.i3.delivery.domain.cart.entity.Cart;
+import com.i3.delivery.domain.cart.repository.CartRepository;
+import com.i3.delivery.domain.order.dto.request.OrderRequestDto;
 import com.i3.delivery.domain.order.dto.response.OrderListResponseDto;
 import com.i3.delivery.domain.order.dto.response.OrderResponseDto;
 import com.i3.delivery.domain.order.entity.Order;
+import com.i3.delivery.domain.order.entity.OrderProduct;
 import com.i3.delivery.domain.order.entity.enums.OrderStatusEnum;
+import com.i3.delivery.domain.order.entity.enums.OrderTypeEnum;
 import com.i3.delivery.domain.order.repository.OrderRepository;
+import com.i3.delivery.domain.product.entity.Product;
 import com.i3.delivery.domain.product.repository.ProductRepository;
 import com.i3.delivery.domain.store.entity.Store;
+import com.i3.delivery.domain.store.enums.StoreStatus;
 import com.i3.delivery.domain.store.repository.StoreRepository;
+import com.i3.delivery.domain.user.entity.User;
 import com.i3.delivery.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,14 +38,11 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
-    private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
 
-    /*public OrderResponseDto createOrder(OrderRequestDto requestDto, User user) {
-        // TODO 검증 부분은 클래스나 메소드로 추출
-        
-        // TODO 의미가 부여된 exception class 를 사용하는 것이 좋음
-        // TODO 공통화된 응답을 위해서 Exception 도 공통화 해야함 -> 이후 globalExceptionHandler와 연결지어야함
-        User orderUser = userRepository.findById(user.getId())
+    public OrderResponseDto createOrder(OrderRequestDto requestDto, Long userId) {
+
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
 
         Store store = storeRepository.findById(requestDto.getStoreId())
@@ -46,38 +52,24 @@ public class OrderService {
             throw new IllegalArgumentException("가게 오픈 전입니다.");
         }
 
-        // TODO 기본 생성자 보다는 builder, factory method 것 사용 권장 (생성자: 실수로 인해서 같은 타입이 존재할 경우, 다른 값이 들어갈 수 있음)
-        Order order = Order.builder()
-                .user(orderUser)
-                .store(store)
-                .orderType(OrderTypeEnum.valueOf(requestDto.getOrderType()))
-                .oRequest(requestDto.getORequest())
-                .build();
+        List<Cart> orderCarttList = cartRepository.findAllByUser_Id(userId);
 
-        List<OrderProduct> orderProductList = requestDto.getProductList().stream()
-                .map(productListDto -> {
-                    Product productList = productRepository.findById(productListDto.getProductId())
-                            .orElseThrow(() -> new IllegalArgumentException("등록된 음식 정보가 존재하지 않습니다."));
-                    return new OrderProduct(order, productList, productListDto.getQuantity());
-                })
-                .collect(Collectors.toList());
+        if (orderCarttList.isEmpty()) {
+            throw new IllegalArgumentException("장바구니가 비었습니다.");
+        }
 
+        BigDecimal totalPrice = orderCarttList.stream()
+                .map(cart -> BigDecimal.valueOf(cart.getQuantity())
+                        .multiply(cart.getProduct().getPrice())) // 수량 * 상품 가격
+                .reduce(BigDecimal.ZERO, BigDecimal::add); // 총합 계산
 
-        // TODO private 메소드로 this.calculateTotalPrice();
-        BigDecimal totalPrice = orderProductList.stream()
-                .map(OrderProduct::getTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
-        order.setTotalPrice(totalPrice);
-        order.setOrderProductList(orderProductList);
+        Order order = Order.createOrder(user, store, requestDto.getOrderType(), requestDto.getOrderRequest(), totalPrice, user.getAddress());
 
         Order savedOrder = orderRepository.save(order);
 
-        // TODO 생성자 보다는 factory method
         return new OrderResponseDto(savedOrder);
 
-    }*/
+    }
 
     /* 2. 주문 취소 */
     @Transactional
@@ -105,12 +97,10 @@ public class OrderService {
         return orderRepository.findAll(pageable).map(order -> new OrderListResponseDto (
                 order.getUser().getId(),
                 order.getId(),
-                order.getProduct_id(),
                 order.getProductName(),
-                order.getQuantity(),
                 order.getTotalPrice(),
                 order.getOrderStatus(),
-                order.getORequest(),
+                order.getOrderRequest(),
                 order.getCreatedAt(),
                 order.getCreatedBy()
         ));
