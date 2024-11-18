@@ -2,23 +2,22 @@ package com.i3.delivery.domain.cart.service;
 
 import com.i3.delivery.domain.cart.dto.CartRequestDto;
 import com.i3.delivery.domain.cart.dto.CartResponseDto;
+import com.i3.delivery.domain.cart.dto.CartUpdateRequestDto;
 import com.i3.delivery.domain.cart.entity.Cart;
 import com.i3.delivery.domain.cart.repository.CartRepository;
-import com.i3.delivery.domain.order.entity.Order;
 import com.i3.delivery.domain.product.entity.Product;
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.user.entity.User;
-import com.i3.delivery.domain.order.repository.OrderRepository;
 import com.i3.delivery.domain.product.repository.ProductRepository;
 import com.i3.delivery.domain.store.repository.StoreRepository;
 import com.i3.delivery.domain.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +27,7 @@ public class CartService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final StoreRepository storeRepository;
-    private final OrderRepository orderRepository;
+
 
     @Transactional
     public CartResponseDto createCart(Long userId, CartRequestDto cartRequestDTO) {
@@ -60,5 +59,33 @@ public class CartService {
                 .storeId(savedCart.getStore().getId())
                 .quantity(savedCart.getQuantity())
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CartResponseDto> getCartsByUserId(Long userId) {
+        return cartRepository.findAllByUserId(userId).stream()
+                .map(CartResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Cart updateCart(Long cartId, Long userId, CartUpdateRequestDto requestDto) {
+        Cart cart = cartRepository.findByIdAndUserId(cartId, userId);
+        if (cart == null) {
+            throw new IllegalArgumentException("해당 카트를 찾을 수 없습니다.");
+        }
+        cart.setQuantity(requestDto.getQuantity());
+        cartRepository.save(cart);
+
+        return cartRepository.save(cart);
+    }
+
+    @Transactional
+    public void deleteCart(Long cartId, Long userId) {
+        Cart cart = cartRepository.findByIdAndUserId(cartId, userId);
+        if (cart == null) {
+            throw new IllegalArgumentException("해당 카트를 찾을 수 없습니다.");
+        }
+        cartRepository.delete(cart);
     }
 }
