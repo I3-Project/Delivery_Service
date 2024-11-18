@@ -1,16 +1,19 @@
 package com.i3.delivery.domain.store.repository.custom.impl;
 
+import com.i3.delivery.domain.store.dto.StoreInfoResponseDto;
 import com.i3.delivery.domain.store.dto.StoreReviewMeta;
 import com.i3.delivery.domain.store.dto.StoreReviewResponseDto;
 import com.i3.delivery.domain.store.dto.StoreReviewResponsePage;
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.store.enums.StoreStatus;
 import com.i3.delivery.domain.store.repository.custom.StoreRepositoryCustom;
+import com.i3.delivery.domain.user.entity.User;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +23,6 @@ import java.util.List;
 
 import static com.i3.delivery.domain.review.entity.QReview.review;
 import static com.i3.delivery.domain.store.entity.QStore.store;
-
 
 public class StoreRepositoryImpl extends QuerydslRepositorySupport implements StoreRepositoryCustom {
 
@@ -124,5 +126,70 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements St
         StoreReviewMeta meta = new StoreReviewMeta(totalCount, (int)average);
 
         return new StoreReviewResponsePage<>(page,meta);
+    }
+
+    @Override
+    public Page<StoreInfoResponseDto> findStores(User user, Pageable pageable, int size) {
+
+        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        JPAQuery<StoreInfoResponseDto> query = queryFactory
+                .select(
+                        Projections.fields(
+                                StoreInfoResponseDto.class,
+                                store.name,
+                                store.description,
+                                store.category.id,
+                                store.user.id,
+                                store.address,
+                                store.phoneNumber,
+                                store.status,
+                                store.totalReviews,
+                                store.ratingAvg
+                        )
+                )
+                .from(store)
+                .where(store.deletedAt.isNull());
+
+        List<StoreInfoResponseDto> stores = getQuerydsl().applyPagination(pageable,query).fetch();
+
+        long totalCount = stores.size();
+
+        return new PageImpl<>(stores,pageable,totalCount);
+
+    }
+
+    public Page<StoreInfoResponseDto> findStoresMaster(User user, Pageable pageable, int size) {
+
+        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        JPAQuery<StoreInfoResponseDto> query = queryFactory
+                .select(
+                        Projections.constructor(
+                                StoreInfoResponseDto.class,
+                                store.name,
+                                store.description,
+                                store.category.id,
+                                store.user.id,
+                                store.address,
+                                store.phoneNumber,
+                                store.status,
+                                store.totalReviews,
+                                store.ratingAvg,
+                                store.createdAt,
+                                store.createdBy,
+                                store.updatedAt,
+                                store.updatedBy,
+                                store.deletedAt,
+                                store.deletedBy
+                        )
+                )
+                .from(store);
+
+        List<StoreInfoResponseDto> stores = getQuerydsl().applyPagination(pageable,query).fetch();
+
+        long totalCount = stores.size();
+
+        return new PageImpl<>(stores,pageable,totalCount);
     }
 }
