@@ -2,6 +2,7 @@ package com.i3.delivery.domain.cart.service;
 
 import com.i3.delivery.domain.cart.dto.CartRequestDto;
 import com.i3.delivery.domain.cart.dto.CartResponseDto;
+import com.i3.delivery.domain.cart.dto.CartUpdateRequestDto;
 import com.i3.delivery.domain.cart.entity.Cart;
 import com.i3.delivery.domain.cart.repository.CartRepository;
 import com.i3.delivery.domain.order.entity.Order;
@@ -60,5 +61,17 @@ public class CartService {
                 .storeId(savedCart.getStore().getId())
                 .quantity(savedCart.getQuantity())
                 .build();
+    }
+
+    @Transactional
+    public Cart updateCart(Long cartId, Long userId, CartUpdateRequestDto requestDto) {
+        Cart cart = cartRepository.findByIdAndUserId(cartId, userId);
+        if (cart == null) {
+            throw new IllegalArgumentException("해당 카트를 찾을 수 없습니다.");
+        }
+        cart.setQuantity(requestDto.getQuantity());
+        cartRepository.save(cart);
+
+        return cartRepository.save(cart);
     }
 }
