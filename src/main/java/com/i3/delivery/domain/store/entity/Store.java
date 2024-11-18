@@ -1,6 +1,7 @@
 package com.i3.delivery.domain.store.entity;
 
 import com.i3.delivery.domain.category.entity.Category;
+import com.i3.delivery.domain.product.entity.Product;
 import com.i3.delivery.domain.review.entity.Review;
 import com.i3.delivery.domain.store.dto.StoreEditRequsetDto;
 import com.i3.delivery.domain.store.enums.StoreStatus;
@@ -78,9 +79,12 @@ public class Store extends BaseEntity {
     @OneToMany(mappedBy = "store")
     private List<Review> reviewList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "store")
+    private List<Product> productList = new ArrayList<>();
+
     @PrePersist
     public void createStoreField(){
-            this.setCreatedBy(getUserNickName());
+            this.setCreatedBy(getUserName());
     }
 
     @PreUpdate
@@ -88,16 +92,16 @@ public class Store extends BaseEntity {
         if(status == StoreStatus.DELETED) {
 
             this.deletedAt = LocalDateTime.now();
-            this.deletedBy = getUserNickName();
+            this.deletedBy = getUserName();
         }
         this.setUpdatedAt(LocalDateTime.now());
-        this.setUpdatedBy(getUserNickName());
+        this.setUpdatedBy(getUserName());
     }
 
-    private static String getUserNickName() {
+    private static String getUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl userDetailsImpl) {
-            return userDetailsImpl.getUser().getNickname();
+            return userDetailsImpl.getUser().getUsername();
         }
         return null;
     }

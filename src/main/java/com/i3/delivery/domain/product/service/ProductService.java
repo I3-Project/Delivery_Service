@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -41,6 +43,7 @@ public class ProductService {
 
         Product product = Product.builder()
                 .name(productName)
+                .uuid(UUID.randomUUID())
                 .description(productDescription)
                 .price(productRegistrationRequestDto.getPrice())
                 .stock(productRegistrationRequestDto.getStock())
