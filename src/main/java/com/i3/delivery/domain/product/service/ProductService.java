@@ -36,10 +36,18 @@ public class ProductService {
 
         Store store = storeService.findStore(productRegistrationRequestDto.getStoreId());
 
+        String productName;
+        String productDescription;
         GeminiRequest geminiRequest = new GeminiRequest();
-        String productName = geminiRequest.answer("음식점에서 파는 음식 명을 한글 10자 이내로 한개만 만들어 주세요.\n");
-        String productDescription = geminiRequest.answer(productName+"을 한글 20자 내로 설명해 주세요.\n");
 
+        if(productRegistrationRequestDto.getName() == null){
+            productName = geminiRequest.answer("음식점에서 파는 음식 명을 한글 10자 이내로 한개만 만들어 주세요.\n");
+            productDescription = geminiRequest.answer(productName+"을 한글 20자 내로 설명해 주세요.\n");
+        }else{
+            String name = productRegistrationRequestDto.getName();
+            productName = name;
+            productDescription = geminiRequest.answer(name+"을 한글 20자 내로 설명해 주세요.\n");
+        }
 
         Product product = Product.builder()
                 .name(productName)
