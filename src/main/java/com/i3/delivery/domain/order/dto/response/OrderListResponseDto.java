@@ -14,25 +14,16 @@ import java.time.LocalDateTime;
 public class OrderListResponseDto {
     private Long userId;
     private Long orderId;
-    private Long productId;
-    //private Long ownerId;
-    private String productName;
-    private Integer quantity;
     private BigDecimal totalPrice;
     private OrderStatusEnum orderState;
-    private String oRequest;
+    private String orderRequest;
     private LocalDateTime createdAt;
-    private String createdBy;
 
     public OrderListResponseDto(Order order) {
             this.userId = order.getUser().getId();
             this.orderId = order.getId();
-            this.productId = order.getProduct_id();
-            //this.ownerId = order.getOwnerId();
-            this.quantity = order.getQuantity();
             this.orderState = order.getOrderStatus();
-            this.oRequest = order.getORequest();
-            this.productName = order.getProductName();
+            this.orderRequest = order.getOrderRequest();
             this.totalPrice = order.getTotalPrice();
             this.createdAt = order.getCreatedAt();
     }

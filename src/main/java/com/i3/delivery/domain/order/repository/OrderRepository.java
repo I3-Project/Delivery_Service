@@ -11,5 +11,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findAllByOwnerId(Long id, Pageable pageable);
 
     //@Query("SELECT p FROM Order p WHERE p.id = :id")
-    Page<Order> findAllByUserId(Long userId, Pageable pageable);
+    //Page<Order> findAllByUserId(Long userId, Pageable pageable);
+
+    Page<Order> findAllByUser_Id(Long userId, Pageable pageable);
 }

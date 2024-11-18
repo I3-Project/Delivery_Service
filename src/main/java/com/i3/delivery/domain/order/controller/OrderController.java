@@ -1,9 +1,11 @@
 package com.i3.delivery.domain.order.controller;
 
+import com.i3.delivery.domain.order.dto.request.OrderRequestDto;
 import com.i3.delivery.domain.order.dto.response.OrderListResponseDto;
 import com.i3.delivery.domain.order.dto.response.OrderResponseDto;
 import com.i3.delivery.domain.order.service.OrderService;
 import com.i3.delivery.domain.user.security.UserDetailsImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,19 +24,16 @@ public class OrderController {
     private final OrderService orderService;
 
     /* 1. 주문 등록 */
-    // TODO hasRole 대신 hasAnyAuthoriy('MANAGER', 'OWNER', 'CUSTOMER')
-    /*@PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'CUSTOMER')")
     @PostMapping("/orders")
     public OrderResponseDto createOrder(
-        // TODO @Valid
             @Valid @RequestBody OrderRequestDto request,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return orderService.createOrder(request, userDetails.getUser());
-    }*/
+        return orderService.createOrder(request, userDetails.getUser().getId());
+    }
 
     /* 2. 주문 취소 */
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_USER')")
     @PostMapping("/orders/{orderId}/cancel")
     public ResponseEntity<Void> cancelOrder(
             @PathVariable("orderId") Long orderId,
@@ -45,7 +44,7 @@ public class OrderController {
     }
 
     // 3. 주문 내역 전체 조회 (관리자)
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_USER')")
     @GetMapping("/orders")
     public ResponseEntity<Page<OrderListResponseDto>> getOrderList(
             @PageableDefault(page = 0, size = 10, sort = "createdAt",
@@ -57,8 +56,8 @@ public class OrderController {
     }
 
     /* 4. 주문 내역 조회 (OWNER) */
-    @PreAuthorize("hasAnyAuthority('MASTER', 'USER')")
-    @GetMapping("orders/{storeId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER')")
+    @GetMapping("/orders/store/{storeId}")
     public ResponseEntity<Page<OrderListResponseDto>> getStoreOrderList(
             @PageableDefault(page = 0, size = 10, sort = "createdAt",
                     direction = Sort.Direction.DESC) Pageable pageable,
@@ -71,8 +70,8 @@ public class OrderController {
     }
 
     /* 5. 주문 내역 조회 (USER) */
-    @PreAuthorize("hasAnyAuthority('MASTER', 'USER')")
-    @GetMapping("orders/{userId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER')")
+    @GetMapping("/orders/user/{userId}")
     public ResponseEntity<Page<OrderListResponseDto>> getUserOrderList(
             @PageableDefault(page = 0, size = 10, sort = "createdAt",
                     direction = Sort.Direction.DESC) Pageable pageable,
@@ -85,7 +84,7 @@ public class OrderController {
     }
 
     /* 6. 주문 삭제 */
-    @PreAuthorize("hasAnyAuthority('MANAGER', 'OWNER', 'USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_USER')")
     @DeleteMapping("/orders/{orderId}")
     public ResponseEntity<Void> deleteOrder(
             @PathVariable("orderId") Long orderId,
@@ -96,8 +95,8 @@ public class OrderController {
     }
 
     /* 7.주문 상세 조회 */
-    @PreAuthorize("hasAnyAuthority('MASTER', 'OWNER', 'USER')")
-    @GetMapping("/orders/{order_id}/details")
+    @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_OWNER', 'ROLE_USER')")
+    @GetMapping("/orders/{orderId}/details")
     public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable Long orderId) {
         OrderResponseDto order = orderService.getOrderDetails(orderId);
         return ResponseEntity.ok(order);

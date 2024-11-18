@@ -1,5 +1,6 @@
 package com.i3.delivery.domain.order.entity;
 
+import com.i3.delivery.domain.cart.entity.Cart;
 import com.i3.delivery.domain.order.entity.enums.OrderStatusEnum;
 import com.i3.delivery.domain.order.entity.enums.OrderTypeEnum;
 import com.i3.delivery.domain.store.entity.Store;
@@ -28,13 +29,12 @@ import java.util.UUID;
 public class Order extends BaseEntity {
 
     @Id
-    // TODO UUID -> IDENTITY (db 도 auto increment)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // TODO Long
+
     private Long id;
 
     @Column(nullable = false)
-    private UUID orderUId;
+    private UUID uuid;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -42,20 +42,14 @@ public class Order extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private OrderStatusEnum orderStatus = OrderStatusEnum.PENDING;
+    private OrderStatusEnum orderStatus;
 
     @Column
     private BigDecimal totalPrice;
 
     @Column
     @Size(max = 60, message = "요청 사항은 60글자 이내로 작성해주세요.")
-    private String oRequest;
-
-    @Column(nullable = false)
-    private Integer quantity;
-
-    @Column(nullable = false)
-    private Long product_id;
+    private String orderRequest;
 
     @Size(max = 50, message = "주소는 최대 50자입니다.")
     private String address;
@@ -70,8 +64,8 @@ public class Order extends BaseEntity {
     @Column(name = "deleted_by")
     private String deletedBy;
 
-    /*@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderProduct> orderProductList = new ArrayList<>();*/
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    private List<Cart> cartList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -81,30 +75,42 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
+    @PrePersist
+    public void createField(){
+        this.setCreatedBy(getUserName());
+    }
 
     @PreUpdate
     public void updateDeleteField(){
-        if(orderStatus == orderStatus.DELETED) {
+        if(orderStatus == OrderStatusEnum.CANCELED) {
             this.deletedAt = LocalDateTime.now();
             this.deletedBy = getUserName();
         }
+        this.setUpdatedAt(LocalDateTime.now());
+        this.setUpdatedBy(getUserName());
     }
 
 
    private static String getUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl userDetailsImpl) {
-            return userDetailsImpl.getUser().getNickname();
+            return userDetailsImpl.getUser().getUsername();
         }
         return null;
     }
 
+    @Builder
    /* 주문 등록 */
-   public Order(User user, Store store, String orderType, String oRequest) {
-        this.user = user;
-        this.store = store;
-        this.orderType = OrderTypeEnum.valueOf(orderType);
-        this.totalPrice = BigDecimal.ZERO;
-        this.oRequest = oRequest;
+   public static Order createOrder(User user, Store store, String orderType, String orderRequest, BigDecimal totalPrice, String address) {
+        return Order.builder()
+                .user(user)
+                .store(store)
+                .orderType(OrderTypeEnum.valueOf(orderType))
+                .orderRequest(orderRequest)
+                .totalPrice(totalPrice)
+                .uuid(UUID.randomUUID())
+                .address(address)
+                .orderStatus(OrderStatusEnum.PENDING)
+                .build();
     }
 }

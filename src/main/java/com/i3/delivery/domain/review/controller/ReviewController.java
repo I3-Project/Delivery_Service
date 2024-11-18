@@ -40,7 +40,7 @@ public class ReviewController {
     }
 
     /* 3. 리뷰 삭제 */
-    @DeleteMapping("reviews/{reviewId}")
+    @DeleteMapping("/reviews/{reviewId}")
     @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER')")
     public ResponseEntity<Void> deleteProduct(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                  @PathVariable Long reviewId) {
@@ -51,7 +51,7 @@ public class ReviewController {
     }
 
     /* 4. 리뷰 조회 (OWNER) */
-    @GetMapping("reviews/{storeId}")
+    @GetMapping("/reviews/{storeId}")
     public Page<ReviewResponseDto> getStoreReviews(
             @PageableDefault(page = 0, size = 10, sort = "createdAt",
                     direction = Sort.Direction.DESC) Pageable pageable,
@@ -62,7 +62,7 @@ public class ReviewController {
     }
 
     /* 5. 리뷰 조회 (USER) */
-    @GetMapping("reviews/myReviews")
+    @GetMapping("/reviews/myReviews")
     @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER')")
     public Page<ReviewResponseDto> getUserReviews(
             @PageableDefault(page = 0, size = 10, sort = "createdAt",

@@ -8,7 +8,9 @@ import com.i3.delivery.domain.store.enums.StoreStatus;
 import com.i3.delivery.domain.store.repository.StoreRepository;
 import com.i3.delivery.domain.store.repository.custom.impl.StoreRepositoryImpl;
 import com.i3.delivery.domain.user.entity.User;
+import com.i3.delivery.domain.user.entity.UserRoleEnum;
 import com.i3.delivery.domain.user.repository.UserRepository;
+import com.i3.delivery.global.exception.store.StoreDeletedException;
 import com.i3.delivery.global.exception.store.StoreNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +44,7 @@ public class StoreService {
 
         Store store = Store.builder()
                 .user(storeUser)
+                .uuid(UUID.randomUUID())
                 .name(storeRegistrationRequestDto.getName())
                 .description(storeRegistrationRequestDto.getDescription())
                 .category(category)
@@ -55,22 +60,29 @@ public class StoreService {
         return StoreRegistrationResponseDto.fromEntity(store);
     }
 
-    public Page<StoreInfoResponseDto> getStores(Pageable pageable, int size) {
+    public Page<StoreInfoResponseDto> getStores(User user,Pageable pageable, int size) {
 
-        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
-
-        return storeRepository.findAll(pageable).
-                map(StoreInfoResponseDto::fromEntity);
+        if(user.getRole().equals(UserRoleEnum.MANAGER) || user.getRole().equals(UserRoleEnum.MASTER)){
+            return storeRepositoryImpl.findStoresMaster(user,pageable,size);
+        }
+        return storeRepositoryImpl.findStores(user,pageable,size);
     }
 
-    public StoreInfoResponseDto getStore(Long id) {
+    public StoreInfoResponseDto getStore(Long id, User user) {
 
         Store store = storeRepository.findById(id).orElse(null);
 
-        return StoreInfoResponseDto.fromEntity(store);
+        if(Objects.requireNonNull(store).getDeletedAt() != null){
+            if(user.getRole().equals(UserRoleEnum.MASTER) || user.getRole().equals(UserRoleEnum.MANAGER)){
+                return StoreInfoResponseDto.fromEntity(Objects.requireNonNull(store));
+            }else{
+                throw new StoreDeletedException();
+            }
+        }
+
+        return StoreInfoResponseDto.fromEntity(Objects.requireNonNull(store));
     }
 
-    @Transactional
     public List<StoreInfoResponseDto> getStoresByKeyword(String keyword,Pageable pageable, int size) {
 
         pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
@@ -84,15 +96,11 @@ public class StoreService {
 
         Store store = storeRepository.findById(id).orElseThrow(StoreNotFoundException::new);
 
-        Category category = findCategory(storeEditRequsetDto);
+        Category category = categoryService.findCategory(storeEditRequsetDto.getCategoryId());
+
         store.update(storeEditRequsetDto,category);
 
         return StoreEditResponseDto.from(store);
-    }
-
-    private Category findCategory(StoreEditRequsetDto storeEditRequsetDto) {
-
-        return categoryService.findCategory(storeEditRequsetDto.getCategoryId());
     }
 
     @Transactional
@@ -106,15 +114,25 @@ public class StoreService {
 
     }
 
-    // TODO 여기서 transanctional 이 필요할까요?? 만약 쓴다면 readOnly = true 로 설정해주세요.
     @Transactional
-    public Page<StoreReviewResponseDto> getStoreAvgAndReviews(String name,Pageable pageable,int size) {
+    public StoreReviewResponsePage<StoreReviewResponseDto> getStoreReviewAvgAndReviews(String name,Pageable pageable,int size) {
 
-        return storeRepositoryImpl.findStoreAvgAndReviews(name,pageable,size);
+        return storeRepositoryImpl.findStoreReviewAvgAndReviews(name,pageable,size);
     }
 
     public Store findStore(Long storeId) {
 
         return storeRepository.findById(storeId).orElseThrow(StoreNotFoundException::new);
+    }
+
+    @Transactional
+    public StoreEditResponseDto updateStoreStatus(Long id, String status) {
+
+        Store store = storeRepository.findById(id).orElseThrow(StoreNotFoundException::new);
+
+        StoreStatus storeStatus = StoreStatus.valueOf(status);
+        store.update(storeStatus);
+
+        return StoreEditResponseDto.from(store);
     }
 }

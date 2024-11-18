@@ -35,6 +35,8 @@ public enum ErrorCode {
 
     // Store
     NOT_FOUND_STORE_EXCEPTION(404, "해당 가게를 찾을 수 없습니다."),
+    DELETED_STORE_EXCEPTION(404, "해당 가게는 삭제된 상태입니다."),
+    NOT_STORE_MANAGER_OR_MASTER(404, "해당 가게의 매니저나 마스터가 아닙니다."),
 
     // Product
     NOT_FOUND_PRODUCT_EXCEPTION(404, "해당 상품을 찾을 수 없습니다."),
