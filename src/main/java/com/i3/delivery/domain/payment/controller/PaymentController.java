@@ -50,9 +50,10 @@ public class PaymentController {
     @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_OWNER')")
     @PutMapping("/payments/{paymentId}")
     public ResponseEntity<Void> modifyPaymentStatus(@RequestBody PaymentStatusRequestDto request,
-                                                   @PathVariable Long paymentId
+                                                    @PathVariable Long paymentId,
+                                                    @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        paymentService.modifyStatusPayment(request, paymentId);
+        paymentService.modifyStatusPayment(request, paymentId, userDetails.getUser().getId());
 
         return ResponseEntity.noContent().build();
     }

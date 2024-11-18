@@ -64,7 +64,7 @@ public class Order extends BaseEntity {
     @Column(name = "deleted_by")
     private String deletedBy;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
     private List<Cart> cartList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

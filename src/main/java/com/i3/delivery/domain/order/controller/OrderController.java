@@ -57,7 +57,7 @@ public class OrderController {
 
     /* 4. 주문 내역 조회 (OWNER) */
     @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER')")
-    @GetMapping("orders/{storeId}")
+    @GetMapping("/orders/store/{storeId}")
     public ResponseEntity<Page<OrderListResponseDto>> getStoreOrderList(
             @PageableDefault(page = 0, size = 10, sort = "createdAt",
                     direction = Sort.Direction.DESC) Pageable pageable,
@@ -71,7 +71,7 @@ public class OrderController {
 
     /* 5. 주문 내역 조회 (USER) */
     @PreAuthorize("hasAnyAuthority('ROLE_MASTER', 'ROLE_USER')")
-    @GetMapping("orders/{userId}")
+    @GetMapping("/orders/user/{userId}")
     public ResponseEntity<Page<OrderListResponseDto>> getUserOrderList(
             @PageableDefault(page = 0, size = 10, sort = "createdAt",
                     direction = Sort.Direction.DESC) Pageable pageable,

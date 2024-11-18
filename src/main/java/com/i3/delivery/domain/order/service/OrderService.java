@@ -97,12 +97,10 @@ public class OrderService {
         return orderRepository.findAll(pageable).map(order -> new OrderListResponseDto (
                 order.getUser().getId(),
                 order.getId(),
-                order.getProductName(),
                 order.getTotalPrice(),
                 order.getOrderStatus(),
                 order.getOrderRequest(),
-                order.getCreatedAt(),
-                order.getCreatedBy()
+                order.getCreatedAt()
         ));
     }
 
@@ -138,7 +136,7 @@ public class OrderService {
 
         pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
 
-        Page<Order> userOrderList = orderRepository.findAllByUserId(userId, pageable);
+        Page<Order> userOrderList = orderRepository.findAllByUser_Id(userId, pageable);
 
         List<OrderListResponseDto> responseDtoList = userOrderList.stream()
                 .map(OrderListResponseDto::new)
