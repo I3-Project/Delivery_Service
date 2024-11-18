@@ -74,4 +74,13 @@ public class CartService {
 
         return cartRepository.save(cart);
     }
+
+    @Transactional
+    public void deleteCart(Long cartId, Long userId) {
+        Cart cart = cartRepository.findByIdAndUserId(cartId, userId);
+        if (cart == null) {
+            throw new IllegalArgumentException("해당 카트를 찾을 수 없습니다.");
+        }
+        cartRepository.delete(cart);
+    }
 }

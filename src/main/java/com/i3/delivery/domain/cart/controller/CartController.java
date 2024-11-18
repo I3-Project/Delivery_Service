@@ -33,7 +33,15 @@ public class CartController {
                                            @RequestBody CartUpdateRequestDto requestDto) {
         Long userId = userDetails.getUser().getId();
         Cart updatedCart = cartService.updateCart(cartId, userId, requestDto);
-        return ResponseEntity.ok("카트 수량 수정 완료");
+        return ResponseEntity.ok("카트 수량 수정완료");
+    }
+
+    @DeleteMapping("/cart/{cartId}")
+    public ResponseEntity<String> deleteCart(@PathVariable Long cartId,
+                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long userId = userDetails.getUser().getId();
+        cartService.deleteCart(cartId, userId);
+        return ResponseEntity.ok("카트 삭제완료");
     }
 
 }
