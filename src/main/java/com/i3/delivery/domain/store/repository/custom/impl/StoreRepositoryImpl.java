@@ -1,6 +1,8 @@
 package com.i3.delivery.domain.store.repository.custom.impl;
 
+import com.i3.delivery.domain.store.dto.StoreReviewMeta;
 import com.i3.delivery.domain.store.dto.StoreReviewResponseDto;
+import com.i3.delivery.domain.store.dto.StoreReviewResponsePage;
 import com.i3.delivery.domain.store.entity.Store;
 import com.i3.delivery.domain.store.enums.StoreStatus;
 import com.i3.delivery.domain.store.repository.custom.StoreRepositoryCustom;
@@ -8,7 +10,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements St
             // TODO .or 보다 여러개 파라미터 사용하는것 고민해보기 (메소드 추출로 eqCatetory 네이밍 where category = "category")
                 .where(nameCon(keyword),
                         categoryCon(keyword),
-                                statusCon(keyword))
+                                statusCon(keyword)) // and로 날아가기 때문에 or로 묶어서 수정
                 .orderBy(
                         store.name.asc(),
                         store.category.name.asc(),
@@ -75,7 +76,7 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements St
     }
 
     @Override
-    public Page<StoreReviewResponseDto> findStoreAvgAndReviews(String name,Pageable pageable, int size) {
+    public StoreReviewResponsePage<StoreReviewResponseDto> findStoreReviewAvgAndReviews(String name, Pageable pageable, int size) {
 
         pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
 
@@ -100,18 +101,22 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements St
         List<StoreReviewResponseDto> reviews = getQuerydsl().applyPagination(pageable,query).fetch();
 
         int totalCount = reviews.size();
+        double sum = 0;
+        for (StoreReviewResponseDto item : reviews) {
+            sum += item.getRating();
+        }
 
-        double average = reviews.stream()
-                .map(StoreReviewResponseDto::getRating)
-                .mapToInt(Integer::intValue)
-                .average()
-                .orElse(0.0);
+        double average = totalCount > 0 ? sum / totalCount : 0;
 
         queryFactory.update(store)
                 .set(store.totalReviews, totalCount)
                 .where(store.name.eq(name))
                 .execute();
 
-        return new PageImpl<>(reviews,pageable,(int)average);
+        PageImpl<StoreReviewResponseDto> page = new PageImpl<>(reviews, pageable, totalCount);
+
+        StoreReviewMeta meta = new StoreReviewMeta(totalCount, (int)average);
+
+        return new StoreReviewResponsePage<>(page,meta);
     }
 }

@@ -107,13 +107,24 @@ public class StoreService {
 
     // TODO 여기서 transanctional 이 필요할까요?? 만약 쓴다면 readOnly = true 로 설정해주세요.
     @Transactional
-    public Page<StoreReviewResponseDto> getStoreAvgAndReviews(String name,Pageable pageable,int size) {
+    public StoreReviewResponsePage<StoreReviewResponseDto> getStoreReviewAvgAndReviews(String name,Pageable pageable,int size) {
 
-        return storeRepositoryImpl.findStoreAvgAndReviews(name,pageable,size);
+        return storeRepositoryImpl.findStoreReviewAvgAndReviews(name,pageable,size);
     }
 
     public Store findStore(Long storeId) {
 
         return storeRepository.findById(storeId).orElseThrow(StoreNotFoundException::new);
+    }
+
+    @Transactional
+    public StoreEditResponseDto updateStoreStatus(Long id, String status) {
+
+        Store store = storeRepository.findById(id).orElseThrow(StoreNotFoundException::new);
+
+        StoreStatus storeStatus = StoreStatus.valueOf(status);
+        store.update(storeStatus);
+
+        return StoreEditResponseDto.from(store);
     }
 }

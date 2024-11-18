@@ -55,12 +55,12 @@ public class StoreController {
     }
 
     @GetMapping("/store/{name}")
-    public Page<StoreReviewResponseDto> getStoreAvgAndReviews(@PathVariable(name = "name") String name,
+    public StoreReviewResponsePage<StoreReviewResponseDto> getStoreReviewAvgAndReviews(@PathVariable(name = "name") String name,
                                                               @PageableDefault(page = 0, size = 10, sort = "createdAt",
                                                                       direction = Sort.Direction.DESC) Pageable pageable,
                                                               @RequestParam Integer size) {
 
-        return storeService.getStoreAvgAndReviews(name,pageable,size);
+        return storeService.getStoreReviewAvgAndReviews(name,pageable,size);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_MASTER')")
@@ -75,5 +75,12 @@ public class StoreController {
     public ResponseEntity<String> deleteStore(@PathVariable(name = "id") Long id) {
 
         return storeService.deleteStore(id);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_OWNER', 'ROLE_MASTER')")
+    @PatchMapping("/status/{id}")
+    public StoreEditResponseDto updateStoreStatus(@PathVariable(name = "id") Long id, @RequestParam String status) {
+
+        return storeService.updateStoreStatus(id, status);
     }
 }
