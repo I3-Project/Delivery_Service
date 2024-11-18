@@ -82,6 +82,7 @@ public class Store extends BaseEntity {
     @OneToMany(mappedBy = "store")
     private List<Product> productList = new ArrayList<>();
 
+
     @PrePersist
     public void createStoreField(){
             this.setCreatedBy(getUserName());
