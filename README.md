@@ -6,21 +6,23 @@
 
 
 ## 📚 목차
-[1. 프로젝트 개요](#1-프로젝트-개요)
+[✅ 1. 프로젝트 개요](#1.-프로젝트-개요)
 
-[2. 역할 분담](#2-역할-분담)
+[2. 역할 분담](#2.-역할-분담)
 
-[3. 요구사항 명세서](#3-요구사항-명세서)
+[3. 요구사항 명세서](#3.-요구사항-명세서)
 
-[4. API 명세서](#4-api-명세서)
+[4. API 명세서](#4.-api-명세서)
 
-[5. ERD](#5-erd)
+[5. ERD](#5.-erd)
 
-[6. 기술 스택](#6-기술-스택)
+[6. 기술 스택](#6.-기술-스택)
 
-[7. 인프라 설계도](#7-인프라-설계도)
+[7. 개발 환경](#7.-개발-환경)
 
-[8.Git Convention](#8-Git-Convention)
+[8. 인프라 설계도](#8.-인프라-설계도)
+
+[9.Git Convention](#8.-Git-Convention)
 
 
 ## ✅ 1. 프로젝트 개요
@@ -51,13 +53,11 @@
 
 ## 🛠️ 6. 기술 스택
 * Backend
-    * Spring Boot 3.3.5
-    * Spring Cloud Gateway
-    * Gradle
+    * Spring WebMVC
+    * Spring Validation
+    * Spring Security
+    * Spring Data JPA
     * JWT
-    * Oauth2
-    * QueryDSL
-    * JPA
 * API Test
     * PostMan
 * Database
@@ -71,12 +71,24 @@
     * Git
     * Github
 
- 
-## 🛠️ 7. 인프라 설계도
+
+## 💻 7. 개발 환경
+
+| 분류         | 상세                                  |
+|------------|:------------------------------------|
+| IDE        | IntelliJ                            |
+| Language   | Java 17                             |
+| Framework  | Spring Boot 3.3.5                   |
+| Repository | RDS, PostgreSQL 17.1                |
+| Build Tool | Gradle 8.10                         |
+| Infra      | EC2, Github Actions                 |
+
+
+## 🛠️ 8. 인프라 설계도
 ![인프라설계도](https://github.com/user-attachments/assets/d181b8ee-0c20-41d0-a57b-f0a364035f10)
 
 
-## 💡 8.Git Convention
+## 💡 9.Git Convention
 
 |머리말|내용|
 |-----|-----|
