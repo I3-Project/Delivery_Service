@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
@@ -40,7 +40,7 @@ public class UserController {
         return ResponseEntity.ok("회원가입 성공");
     }
 
-    // 회원정보목록 조회
+    // 회원정보목록 조회 ( MANAGER, MASTER )
     @GetMapping("/users")
     @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_MASTER')")
     public ResponseEntity<Page<UserAllInfoResponseDto>> getAllUsers(
@@ -64,17 +64,17 @@ public class UserController {
     @PatchMapping("/users")
     public ResponseEntity<String> editUserInfo(@Valid @RequestBody UserEditRequestDto requestDto, BindingResult bindingResult) {
 
-        // 유효성 검사 실패 시
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
             return ResponseEntity.badRequest().body(errorMessage);
         }
-        // 유효성 검사 통과 시
+
         userService.editUserInfo(requestDto);
 
         return ResponseEntity.ok("회원정보 수정 성공");
     }
 
+    // 회원정보 수정 ( MASTER )
     @PatchMapping("/users/{username}")
     @PreAuthorize("hasAuthority('ROLE_MASTER')")
     public ResponseEntity<String> editUserInfoByMaster(
@@ -84,6 +84,7 @@ public class UserController {
         return ResponseEntity.ok("회원정보 수정 성공");
     }
 
+    // 회원권한 부여 ( MASTER )
     @PreAuthorize("hasAnyAuthority('ROLE_MASTER')")
     @PatchMapping("/users/role")
     public ResponseEntity<String> editUserRole(@RequestBody UserRoleEditRequestDto requestDto) {
@@ -91,12 +92,14 @@ public class UserController {
         return ResponseEntity.ok("권한 부여 성공");
     }
 
+    // 회원삭제
     @DeleteMapping("/users")
     public ResponseEntity<String> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.deleteUser(userDetails.getUsername());
         return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
     }
 
+    // 회원삭제( MANAGER, MASTER )
     @PreAuthorize("hasAnyAuthority('ROLE_MANAGER', 'ROLE_MASTER')")
     @DeleteMapping("/users/{username}")
     public ResponseEntity<String> deleteUser(@PathVariable("username") String username) {

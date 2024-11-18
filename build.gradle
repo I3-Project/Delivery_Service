@@ -25,6 +25,11 @@ repositories {
 
 dependencies {
 
+    // PostgreSQL
+    //runtimeOnly 'org.postgresql:postgresql'
+    //implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
+
+
     // AI
     implementation group: 'org.json', name: 'json', version: '20240303'
 
