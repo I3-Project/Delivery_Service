@@ -35,9 +35,9 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements St
         List<Store> stores = queryFactory
                 .selectFrom(store)
             // TODO .or 보다 여러개 파라미터 사용하는것 고민해보기 (메소드 추출로 eqCatetory 네이밍 where category = "category")
-                .where(nameCon(keyword)
-                        .or(categoryCon(keyword)
-                                .or(statusCon(keyword))))
+                .where(nameCon(keyword),
+                        categoryCon(keyword),
+                                statusCon(keyword))
                 .orderBy(
                         store.name.asc(),
                         store.category.name.asc(),

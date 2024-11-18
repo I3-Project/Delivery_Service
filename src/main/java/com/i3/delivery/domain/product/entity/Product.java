@@ -62,7 +62,7 @@ public class Product extends BaseEntity {
 
     @PrePersist
     public void createStoreField(){
-        this.setCreatedBy(getUserNickName());
+        this.setCreatedBy(getUserName());
     }
 
     @PreUpdate
@@ -70,16 +70,16 @@ public class Product extends BaseEntity {
         if(status == ProductStatus.DELETED) {
 
             this.deletedAt = LocalDateTime.now();
-            this.deletedBy = getUserNickName();
+            this.deletedBy = getUserName();
         }
         this.setUpdatedAt(LocalDateTime.now());
-        this.setUpdatedBy(getUserNickName());
+        this.setUpdatedBy(getUserName());
     }
 
-    private static String getUserNickName() {
+    private static String getUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl userDetailsImpl) {
-            return userDetailsImpl.getUser().getNickname();
+            return userDetailsImpl.getUser().getUsername();
         }
         return null;
     }

@@ -30,7 +30,7 @@ public class Review extends BaseEntity {
     private Long id;
 
     @Column
-    private UUID reviewUId;
+    private UUID uuid;
 
     @Column(nullable = false)
     @Size(max = 100, message = "리뷰 내용은 100자까지 작성 가능합니다.")
@@ -62,17 +62,24 @@ public class Review extends BaseEntity {
 
     @Column(name = "deleted_by")
     private String deletedBy;
+
+    @PrePersist
+    public void createField(){
+        this.setCreatedBy(getUserName());
+    }
     @PreUpdate
     public void updateDeleteField(){
         if (reviewStatus == ReviewStatusEnum.DELETED) {
             this.deletedAt = LocalDateTime.now();
             this.deletedBy = getUserName();
         }
+        this.setUpdatedAt(LocalDateTime.now());
+        this.setUpdatedBy(getUserName());
     }
     private static String getUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl userDetailsImpl) {
-            return userDetailsImpl.getUser().getNickname();
+            return userDetailsImpl.getUser().getUsername();
         }
         return null;
     }
@@ -87,6 +94,7 @@ public class Review extends BaseEntity {
                 .content(request.getContent())
                 .rating(request.getRating())
                 .reviewStatus(ReviewStatusEnum.UPLOADED)
+                .uuid(UUID.randomUUID())
                 .build();
     }
 

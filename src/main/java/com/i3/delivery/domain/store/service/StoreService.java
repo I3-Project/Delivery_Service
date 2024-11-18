@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +42,7 @@ public class StoreService {
 
         Store store = Store.builder()
                 .user(storeUser)
+                .uuid(UUID.randomUUID())
                 .name(storeRegistrationRequestDto.getName())
                 .description(storeRegistrationRequestDto.getDescription())
                 .category(category)
@@ -67,7 +70,7 @@ public class StoreService {
 
         Store store = storeRepository.findById(id).orElse(null);
 
-        return StoreInfoResponseDto.fromEntity(store);
+        return StoreInfoResponseDto.fromEntity(Objects.requireNonNull(store));
     }
 
     @Transactional
@@ -84,15 +87,11 @@ public class StoreService {
 
         Store store = storeRepository.findById(id).orElseThrow(StoreNotFoundException::new);
 
-        Category category = findCategory(storeEditRequsetDto);
+        Category category = categoryService.findCategory(storeEditRequsetDto.getCategoryId());
+
         store.update(storeEditRequsetDto,category);
 
         return StoreEditResponseDto.from(store);
-    }
-
-    private Category findCategory(StoreEditRequsetDto storeEditRequsetDto) {
-
-        return categoryService.findCategory(storeEditRequsetDto.getCategoryId());
     }
 
     @Transactional

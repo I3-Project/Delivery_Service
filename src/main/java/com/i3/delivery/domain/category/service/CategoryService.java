@@ -8,6 +8,8 @@ import com.i3.delivery.global.exception.category.CategoryNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -18,6 +20,7 @@ public class CategoryService {
 
         Category category = Category.builder()
                 .name(categoryRequestDto.getCategoryName())
+                .uuid(UUID.randomUUID())
                 .description(categoryRequestDto.getDescription())
                 .build();
 
