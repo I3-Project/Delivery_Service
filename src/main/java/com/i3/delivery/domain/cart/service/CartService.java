@@ -42,7 +42,6 @@ public class CartService {
                 .orElseThrow(() -> new IllegalArgumentException("가게 정보가 없습니다."));
 
         Cart cart = Cart.builder()
-                .uuid(UUID.randomUUID())
                 .user(user)
                 .product(product)
                 .store(store)
@@ -53,7 +52,6 @@ public class CartService {
 
         return CartResponseDto.builder()
                 .id(savedCart.getId())
-                .uuid(savedCart.getUuid().toString())
                 .userId(savedCart.getUser().getId())
                 .productId(savedCart.getProduct().getId())
                 .storeId(savedCart.getStore().getId())
