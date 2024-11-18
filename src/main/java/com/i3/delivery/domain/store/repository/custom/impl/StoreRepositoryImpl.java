@@ -31,7 +31,6 @@ public class StoreRepositoryImpl extends QuerydslRepositorySupport implements St
         this.queryFactory = queryFactory;
     }
 
-    // TODO Paging (+ Sorting)
     @Override
     public List<Store> findAll(String keyword, Pageable pageable){
         List<Store> stores = queryFactory
