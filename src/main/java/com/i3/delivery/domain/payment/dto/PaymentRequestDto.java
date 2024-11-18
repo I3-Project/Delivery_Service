@@ -13,5 +13,4 @@ import java.math.BigDecimal;
 public class PaymentRequestDto {
     private Long orderId;
     private String pgId;
-    private BigDecimal totalPrice;
 }
