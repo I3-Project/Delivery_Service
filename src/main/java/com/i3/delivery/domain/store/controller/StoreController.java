@@ -34,15 +34,17 @@ public class StoreController {
     @GetMapping
     public Page<StoreInfoResponseDto> getAllStore(@PageableDefault(page = 0, size = 10,
             sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-                                                  @RequestParam Integer size){
+                                                  @RequestParam Integer size,
+                                                  @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        return storeService.getStores(pageable,size);
+        return storeService.getStores(userDetails.getUser(), pageable, size);
     }
 
     @GetMapping("/{id}")
-    public StoreInfoResponseDto getStore(@PathVariable(name = "id") Long id) {
+    public StoreInfoResponseDto getStore(@PathVariable(name = "id") Long id,
+                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return storeService.getStore(id);
+        return storeService.getStore(id,userDetails.getUser());
     }
 
     @GetMapping("/keyword/{keyword}")

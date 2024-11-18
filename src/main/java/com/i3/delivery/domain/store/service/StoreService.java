@@ -8,7 +8,9 @@ import com.i3.delivery.domain.store.enums.StoreStatus;
 import com.i3.delivery.domain.store.repository.StoreRepository;
 import com.i3.delivery.domain.store.repository.custom.impl.StoreRepositoryImpl;
 import com.i3.delivery.domain.user.entity.User;
+import com.i3.delivery.domain.user.entity.UserRoleEnum;
 import com.i3.delivery.domain.user.repository.UserRepository;
+import com.i3.delivery.global.exception.store.StoreDeletedException;
 import com.i3.delivery.global.exception.store.StoreNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -58,22 +60,29 @@ public class StoreService {
         return StoreRegistrationResponseDto.fromEntity(store);
     }
 
-    public Page<StoreInfoResponseDto> getStores(Pageable pageable, int size) {
+    public Page<StoreInfoResponseDto> getStores(User user,Pageable pageable, int size) {
 
-        pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
-
-        return storeRepository.findAll(pageable).
-                map(StoreInfoResponseDto::fromEntity);
+        if(user.getRole().equals(UserRoleEnum.MANAGER) || user.getRole().equals(UserRoleEnum.MASTER)){
+            return storeRepositoryImpl.findStoresMaster(user,pageable,size);
+        }
+        return storeRepositoryImpl.findStores(user,pageable,size);
     }
 
-    public StoreInfoResponseDto getStore(Long id) {
+    public StoreInfoResponseDto getStore(Long id, User user) {
 
         Store store = storeRepository.findById(id).orElse(null);
+
+        if(Objects.requireNonNull(store).getDeletedAt() != null){
+            if(user.getRole().equals(UserRoleEnum.MASTER) || user.getRole().equals(UserRoleEnum.MANAGER)){
+                return StoreInfoResponseDto.fromEntity(Objects.requireNonNull(store));
+            }else{
+                throw new StoreDeletedException();
+            }
+        }
 
         return StoreInfoResponseDto.fromEntity(Objects.requireNonNull(store));
     }
 
-    @Transactional
     public List<StoreInfoResponseDto> getStoresByKeyword(String keyword,Pageable pageable, int size) {
 
         pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
@@ -105,7 +114,6 @@ public class StoreService {
 
     }
 
-    // TODO 여기서 transanctional 이 필요할까요?? 만약 쓴다면 readOnly = true 로 설정해주세요.
     @Transactional
     public StoreReviewResponsePage<StoreReviewResponseDto> getStoreReviewAvgAndReviews(String name,Pageable pageable,int size) {
 
