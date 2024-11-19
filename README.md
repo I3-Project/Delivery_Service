@@ -34,7 +34,7 @@
 | 이름                                         | 역할 분담                        |
 |--------------------------------------------|------------------------------|
 | 신상우      | User, Auth&Jwt, Cart        |
-| 민지수      | Order, Payment, Review, Aws, RDS        |
+| 민지수      | Order, Payment, Review, AWS, RDS        |
 | 김한준      | Category, Store, Product, Google Api  |
 
 
