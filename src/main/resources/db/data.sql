@@ -8,7 +8,7 @@ create table p_cart (
                         constraint FK_cart_product foreign key (product_id) references p_products (id),
                         constraint FK_cart_store foreign key (store_id) references p_stores (id),
                         constraint FK_cart_user foreign key (user_id) references p_users (id)
-) engine=InnoDB;
+)
 
 create table p_categories (
                               id bigint not null auto_increment,
@@ -16,7 +16,7 @@ create table p_categories (
                               category_name varchar(255) not null,
                               uuid binary(16),
                               primary key (id)
-) engine=InnoDB;
+)
 
 create table p_order (
                          id bigint not null auto_increment,
@@ -38,7 +38,7 @@ create table p_order (
                          primary key (id),
                          constraint FK_order_store foreign key (store_id) references p_stores (id),
                          constraint FK_order_user foreign key (user_id) references p_users (id)
-) engine=InnoDB;
+)
 
 create table p_payment (
                            id bigint not null auto_increment,
@@ -57,7 +57,7 @@ create table p_payment (
                            primary key (id),
                            constraint FK_payment_order foreign key (order_id) references p_order (id),
                            constraint FK_payment_user foreign key (user_id) references p_users (id)
-) engine=InnoDB;
+)
 
 create table p_products (
                             id bigint not null auto_increment,
@@ -78,7 +78,7 @@ create table p_products (
                             primary key (id),
                             constraint FK_product_store foreign key (store_id) references p_stores (id),
                             constraint FK_product_user foreign key (user_id) references p_users (id)
-) engine=InnoDB;
+)
 
 create table p_review (
                           id bigint not null auto_increment,
@@ -99,7 +99,7 @@ create table p_review (
                           constraint FK_review_order foreign key (order_id) references p_order (id),
                           constraint FK_review_store foreign key (store_id) references p_stores (id),
                           constraint FK_review_user foreign key (user_id) references p_users (id)
-) engine=InnoDB;
+)
 
 create table p_stores (
                           id bigint not null auto_increment,
@@ -122,7 +122,7 @@ create table p_stores (
                           primary key (id),
                           constraint FK_store_category foreign key (category_id) references p_categories (id),
                           constraint FK_store_owner foreign key (owner_id) references p_users (id)
-) engine=InnoDB;
+)
 
 create table p_users (
                          id bigint not null auto_increment,
@@ -145,4 +145,4 @@ create table p_users (
                          constraint UK_users_nickname unique (nickname),
                          constraint UK_users_phone unique (phone),
                          constraint UK_users_username unique (username)
-) engine=InnoDB;
+)
